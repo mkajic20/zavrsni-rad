@@ -1,9 +1,16 @@
-import './App.css';
+import './App.scss';
+import Navigacija from './Komponente/Navigacija/Navigacija';
+import Zaglavlje from './Komponente/Zaglavlje/Zaglavlje';
 
 function App() {
-  console.log("ispis");
   return (
-    <><h1>test</h1></>
+    <>
+      <Zaglavlje />
+      <div className='sadrzaj'>
+        <Navigacija />
+        <div className='stranica'></div>
+      </div>
+    </>
   );
 }
 

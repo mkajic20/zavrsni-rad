@@ -1,0 +1,17 @@
+@import '../../theme.scss';
+
+.gumb {
+    background-color: $crvena;
+    color: white;
+    border-radius: 10px;
+    border: none;
+    width: 100%;
+    font-size: 15px;
+    font-weight: bold;
+    padding: 5px 15px;
+
+    &:hover {
+        background-color: $crvenaTamna;
+        cursor: pointer;
+    }
+}

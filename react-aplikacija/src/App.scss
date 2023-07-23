@@ -1,0 +1,23 @@
+@import 'theme.scss';
+
+* {
+    font-family: $font;
+    margin: 0;
+}
+
+html, body, #root {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.sadrzaj {
+    display: flex;
+    height: 100%;
+}
+
+.stranica {
+    background-color: $tamnoSiva;
+    min-height: 100px;
+    min-width: 100px;
+}

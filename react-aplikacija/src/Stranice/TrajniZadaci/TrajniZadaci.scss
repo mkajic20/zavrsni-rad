@@ -1,0 +1,13 @@
+.odjeljak {
+    margin-top:30px;
+}
+
+.gumb-dodaj{
+    width: 150px;
+    margin-top:30px;
+}
+
+.zadaci {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+}

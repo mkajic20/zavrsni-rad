@@ -6,19 +6,14 @@ import './Zaglavlje.scss'
 const Zaglavlje = props => {
   return (
     <>
-    <div class="zaglavlje"> 
-      <p class="logotip">TaskHub</p>
-      <div class="omotac-gumba"> 
-        <div class="gumb-zaglavlja">
-          <Gumb tekst="Prijava" />
-        </div>
-        <div class="gumb-zaglavlja">
-          <Gumb tekst="Registracija" />
+    <div className="zaglavlje"> 
+      <p className="logotip">TaskHub</p>
+      <div className="omotac-gumba"> 
+        <div className="gumb-zaglavlja">
+          <Gumb tekst="Odjava" />
         </div>
       </div>
     </div>
-      
-
     </>
   )
 }

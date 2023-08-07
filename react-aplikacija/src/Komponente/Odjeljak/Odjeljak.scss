@@ -1,0 +1,10 @@
+.odjeljak{
+    > *:not(h2.odjeljak-naslov) {
+        margin-top: 5px;
+      }
+}
+
+.odjeljak-naslov {
+    margin-bottom: 15px;
+}
+

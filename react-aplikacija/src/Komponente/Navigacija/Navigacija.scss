@@ -5,4 +5,20 @@
     background-color: $siva;
     width: 200px;
     border-right: 1px solid white;
+    position: fixed;
+    color: white;
+    z-index: 9999;
+
+}
+
+section {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+}
+
+a {
+    text-decoration: none;
+    color: white;
 }

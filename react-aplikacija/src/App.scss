@@ -11,13 +11,18 @@ html, body, #root {
     padding: 0;
 }
 
-.sadrzaj {
-    display: flex;
-    height: 100%;
+.navigacija {
+  margin-top: 61px;
 }
 
 .stranica {
-    background-color: $tamnoSiva;
-    min-height: 100px;
-    min-width: 100px;
+  background-color: $tamnoSiva;
+  flex: 1;
+  overflow-y: auto;
+  padding-left: 30px;
+  margin-left: 201px;
+  color: white;
+  padding-top: 91px;
+  height: 100%;
+  overflow: hidden; 
 }

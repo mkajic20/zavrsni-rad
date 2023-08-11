@@ -14,4 +14,12 @@
         background-color: $crvenaTamna;
         cursor: pointer;
     }
+
+    &:disabled {
+        background-color: $svijetloSiva;
+
+        &:hover {
+            cursor: auto;
+        }
+    }
 }

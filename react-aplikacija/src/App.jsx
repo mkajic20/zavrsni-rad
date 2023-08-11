@@ -14,7 +14,7 @@ function App() {
       <main className='stranica'>
         <Routes>
           <Route path="/trajni-zadaci" element={<TrajniZadaci />}/>
-          {/* <Route path="/tjedni-zadaci" element={<TjedniZadaci />}/> */}
+          <Route path="/tjedni-zadaci" element={<TjedniZadaci />}/>
         </Routes>
       </main>
     </>

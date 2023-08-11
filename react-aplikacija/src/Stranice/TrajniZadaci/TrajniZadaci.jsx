@@ -75,7 +75,7 @@ export const TrajniZadaci = () => {
       zavrsen: false,
     };
   
-    setNezavrseniZadaci((prevNezavrseniZadaci) => [...prevNezavrseniZadaci, noviZadatak]);
+    setNezavrseniZadaci((stariNezavrseniZadaci) => [...stariNezavrseniZadaci, noviZadatak]);
     setDodavanje(false);
   }
 

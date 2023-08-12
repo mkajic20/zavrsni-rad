@@ -16,6 +16,7 @@ const TjedniZadaci = () => {
   const [dodavanje, setDodavanje] = useState(false);
   const [brisanje, setBrisanje] = useState(false);
   const [zadatakZaBrisanje, setZadatakZaBrisanje] = useState(null);
+  const [spremljeniZadaci, setSpremljeniZadaci] = useState([]);
 
 
   const dohvatiTjedan = async () => {
@@ -92,22 +93,34 @@ const TjedniZadaci = () => {
 
   const dohvatiPodatkeZaTjedan = async (tjedan) => {
     //TODO: spremiti vec dohvacene podatke i napraviti provjeru da se ne dohvacaju podaci koji su vec dohvaceni
-    const podaci = await dohvatiTjednePodatke(tjedan);
-    let azuriraniZadaci;
+    const spremljeniZadatak = spremljeniZadaci.find((zadatak) => zadatak.tjedan === tjedan);
 
-    if (podaci !== null) {
-      azuriraniZadaci = zadaci.map((zadatak) => {
-        const podatakZaZadatak = podaci.find((podatak) => podatak.id === zadatak.id);
-        if (podatakZaZadatak) {
-          return { ...zadatak, zavrsen: podatakZaZadatak.postavljeno };
-        } else {
-          return { ...zadatak, zavrsen: false };
-        }
-      });
+    if (spremljeniZadatak) {
+      setZadaci(spremljeniZadatak.podaci);
     } else {
-      azuriraniZadaci = zadaci.map((zadatak) => ({ ...zadatak, zavrsen: false }));
+      const podaci = await dohvatiTjednePodatke(tjedan);
+      let azuriraniZadaci;
+
+      if (podaci !== null) {
+        azuriraniZadaci = zadaci.map((zadatak) => {
+          const podatakZaZadatak = podaci.find((podatak) => podatak.id === zadatak.id);
+          if (podatakZaZadatak) {
+            return { ...zadatak, zavrsen: podatakZaZadatak.postavljeno };
+          } else {
+            return { ...zadatak, zavrsen: false };
+          }
+        });
+      } else {
+        azuriraniZadaci = zadaci.map((zadatak) => ({ ...zadatak, zavrsen: false }));
+      }
+      setZadaci(azuriraniZadaci);
+
+      const noviPodaci = {
+        tjedan: tjedan,
+        podaci: azuriraniZadaci
+      };
+      setSpremljeniZadaci((stariZadaci) => [...stariZadaci, noviPodaci]);
     }
-    setZadaci(azuriraniZadaci);
   }
 
   const promijeniStanjeZadatka = (id, zavrsen) => {
@@ -122,13 +135,25 @@ const TjedniZadaci = () => {
     //kod kreiranja odma treba dohvatiti kreirani zadatak, zato sto treba imati id
 
     const noviZadatak = {
-      id: zadaci.length + 1,
+      id: zadaci.length + 2,
       naslov: naslov,
       opis: opis,
       zavrsen: false,
     };
   
+    //u varijbli spremljeniZadaci se bez ovog dijela ne doda novi zadatak za tjedan koji je trenutno odabran
+    const azuriraniSpremljeniZadaci = spremljeniZadaci.map((spremljeni) => {
+      if (spremljeni.tjedan === tjedan) {
+        return {
+          ...spremljeni,
+          podaci: [...spremljeni.podaci, noviZadatak],
+        };
+      }
+      return spremljeni;
+    });
+
     setZadaci((stariZadaci) => [...stariZadaci, noviZadatak]);
+    setSpremljeniZadaci(azuriraniSpremljeniZadaci);
     setDodavanje(false);
   }
 
@@ -136,7 +161,14 @@ const TjedniZadaci = () => {
     // TODO: Obrisati zadatak na serveru
     const id = zadatakZaBrisanje;
     const azuriraniZadaci = zadaci.filter((zadatak) => zadatak.id !== id);
+
+    const azuriraniSpremljeniZadaci = spremljeniZadaci.map((spremljeni) => ({
+      ...spremljeni,
+      podaci: spremljeni.podaci.filter((zadatak) => zadatak.id !== id),
+    }));
+
     setZadaci(azuriraniZadaci);
+    setSpremljeniZadaci(azuriraniSpremljeniZadaci);
     setBrisanje(false);
   };
 

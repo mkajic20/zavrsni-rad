@@ -103,7 +103,7 @@ export const TrajniZadaci = () => {
     <>
       <h1>Trajni zadaci</h1>
       <div className='gumb-dodaj'>
-        <Gumb tekst="Dodaj novi" poziv={() => setDodavanje(true)}/>
+        <Gumb tekst="Novi zadatak" poziv={() => setDodavanje(true)}/>
       </div>
       <div className='zadaci'>
         <Odjeljak naslov='Nezavršeni'>

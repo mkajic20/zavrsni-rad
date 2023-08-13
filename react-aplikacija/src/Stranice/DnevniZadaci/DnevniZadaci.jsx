@@ -1,16 +1,15 @@
 import React, { useEffect, useState } from 'react'
-import './TjedniZadaci.scss'
+import './DnevniZadaci.scss'
 import Gumb from '../../Komponente/Gumb/Gumb'
 import { formatirajDatum } from '../../PomocneFunkcije/datum';
 import Zadatak from '../../Komponente/Zadatak/Zadatak';
-import { dohvatiTjednePodatke } from '../../PomocneFunkcije/server';
+import { dohvatiDnevnePodatke } from '../../PomocneFunkcije/server';
 import KreiranjeZadatka from '../../Komponente/KreiranjeZadatka/KreiranjeZadatka';
 import PotvrdniProzor from '../../Komponente/PotvrdniProzor/PotvrdniProzor';
 
-const TjedniZadaci = () => {
-  const [tjedan, setTjedan] = useState(null);
-  const [trenutniTjedan, setTrenutniTjedan] = useState(null);
-  const [pocetakTjedna, setPocetakTjedna] = useState(null);
+const DnevniZadaci = () => {
+  const [dan, setDan] = useState(null);
+  const [trenutniDan, setTrenutniDan] = useState(null);
   const [zadaci, setZadaci] = useState([]);
   const [zadaciUcitavanje, setZadaciUcitavanje] = useState(true);
   const [dodavanje, setDodavanje] = useState(false);
@@ -18,54 +17,38 @@ const TjedniZadaci = () => {
   const [zadatakZaBrisanje, setZadatakZaBrisanje] = useState(null);
   const [spremljeniZadaci, setSpremljeniZadaci] = useState([]);
 
+  //popravit kreiranje zadataka, trenutno se kreirani zadatak ne prikazuje ispravno na danima
+  //popravit pocetno ucitavanje stranice, trenutno se ne ucitavaju stanja zadataka
 
-  const dohvatiTjedan = async () => {
-    const trenutniDatum = new Date();
-    const trenutniDan = trenutniDatum.getDay();
 
-    const doPonedjeljka = trenutniDan === 0 ? 6 : trenutniDan - 1;
-    const pocetakTjedna = new Date(trenutniDatum);
-    pocetakTjedna.setDate(trenutniDatum.getDate() - doPonedjeljka);
+  const dohvatiDan = async () => {
+    const trenutniDatum = formatirajDatum(new Date());
+    setTrenutniDan(trenutniDatum);
+    setDan(trenutniDatum);
 
-    const doNedjelje = 6 - doPonedjeljka;
-    const krajTjedna = new Date(trenutniDatum);
-    krajTjedna.setDate(trenutniDatum.getDate() + doNedjelje);
-
-    const trenutniTjedan = `${formatirajDatum(pocetakTjedna)} - ${formatirajDatum(krajTjedna)}`
-
-    setTrenutniTjedan(trenutniTjedan);
-    setTjedan(trenutniTjedan);
-    setPocetakTjedna(pocetakTjedna);
-
-    await dohvatiPodatkeZaTjedan(trenutniTjedan);
+    await dohvatiPodatkeZaDan(trenutniDatum);
   }
 
-  const postaviPrethodniTjedan = async () => {
-
-    const pocetakPrethodnogTjedna = new Date(pocetakTjedna);
-    pocetakPrethodnogTjedna.setDate(pocetakPrethodnogTjedna.getDate() - 7);
-
-    const krajPrethodnogTjedna = new Date(pocetakPrethodnogTjedna);
-    krajPrethodnogTjedna.setDate(krajPrethodnogTjedna.getDate() + 6);
-
-    const prethodniTjedan = `${formatirajDatum(pocetakPrethodnogTjedna)} - ${formatirajDatum(krajPrethodnogTjedna)}`
-    setTjedan(prethodniTjedan);
-    setPocetakTjedna(pocetakPrethodnogTjedna);
-    await dohvatiPodatkeZaTjedan(prethodniTjedan);
+  const postaviPrethodniDan = async () => {
+    //1 se oduzima mjesecu jer je mjesec u javascriptu indeksiran od 0, sto znaci da su dan i mjesec zamijenjeni
+    const [danDatuma, mjesecDatuma, godinaDatuma] = dan.split('.');
+    const prethodniDatum = new Date(godinaDatuma, mjesecDatuma - 1, danDatuma);
+    prethodniDatum.setDate(prethodniDatum.getDate() - 1);
+    const formatiraniPrethodniDatum = formatirajDatum(prethodniDatum);
+    setDan(formatiraniPrethodniDatum);
+    await dohvatiPodatkeZaDan(formatiraniPrethodniDatum);
   };
-
-  const postaviSljedeciTjedan = async () => {
-    const pocetakSljedecegTjedna = new Date(pocetakTjedna);
-    pocetakSljedecegTjedna.setDate(pocetakSljedecegTjedna.getDate() + 7);
-
-    const krajSljedecegTjedna = new Date(pocetakSljedecegTjedna);
-    krajSljedecegTjedna.setDate(krajSljedecegTjedna.getDate() + 6);
-
-    const sljedeciTjedan = `${formatirajDatum(pocetakSljedecegTjedna)} - ${formatirajDatum(krajSljedecegTjedna)}`
-    setTjedan(sljedeciTjedan);
-    setPocetakTjedna(pocetakSljedecegTjedna);
-    await dohvatiPodatkeZaTjedan(sljedeciTjedan);
+  
+  const postaviSljedeciDan = async () => {
+    //1 se oduzima mjesecu jer je mjesec u javascriptu indeksiran od 0, sto znaci da su dan i mjesec zamijenjeni
+    const [danDatuma, mjesecDatuma, godinaDatuma] = dan.split('.');
+    const sljedeciDatum = new Date(godinaDatuma, mjesecDatuma - 1, danDatuma);
+    sljedeciDatum.setDate(sljedeciDatum.getDate() + 1);
+    const formatiraniSljedeciDatum = formatirajDatum(sljedeciDatum);
+    setDan(formatiraniSljedeciDatum);
+    await dohvatiPodatkeZaDan(formatiraniSljedeciDatum);
   };
+  
 
 
 
@@ -91,14 +74,15 @@ const TjedniZadaci = () => {
     setZadaciUcitavanje(false);
   };
 
-  const dohvatiPodatkeZaTjedan = async (tjedan) => {
+  const dohvatiPodatkeZaDan = async (dan) => {
     //TODO: spremiti vec dohvacene podatke i napraviti provjeru da se ne dohvacaju podaci koji su vec dohvaceni
-    const spremljeniZadatak = spremljeniZadaci.find((zadatak) => zadatak.tjedan === tjedan);
+    // console.log(zadaci);
+    const spremljeniZadatak = spremljeniZadaci.find((zadatak) => zadatak.dan === dan);
 
     if (spremljeniZadatak) {
       setZadaci(spremljeniZadatak.podaci);
     } else {
-      const podaci = await dohvatiTjednePodatke(tjedan);
+      const podaci = await dohvatiDnevnePodatke(dan);
       let azuriraniZadaci;
 
       if (podaci !== null) {
@@ -116,7 +100,7 @@ const TjedniZadaci = () => {
       setZadaci(azuriraniZadaci);
 
       const noviPodaci = {
-        tjedan: tjedan,
+        dan: dan,
         podaci: azuriraniZadaci
       };
       setSpremljeniZadaci((stariZadaci) => [...stariZadaci, noviPodaci]);
@@ -125,7 +109,7 @@ const TjedniZadaci = () => {
 
   const promijeniStanjeZadatka = (id, zavrsen) => {
     //TODO: promijeniti stanje zadatka na serveru
-    //koristeci id, stanje te varijablu tjedan
+    //koristeci id, stanje te varijablu dan
     //ako je zavrsen true, onda se mijenja stanje, a ako je false onda se brise 
   }
 
@@ -141,6 +125,7 @@ const TjedniZadaci = () => {
       zavrsen: false,
     };
   
+    //u varijabli spremljeniZadaci se bez ovog dijela ne doda novi zadatak za dan koji je trenutno odabran
     const azuriraniSpremljeniZadaci = spremljeniZadaci.map((spremljeni) => {
         return {
           ...spremljeni,
@@ -179,7 +164,7 @@ const TjedniZadaci = () => {
   useEffect(() => {
     const asinkroniDohvat = async () => {
       if (!zadaciUcitavanje) {
-        await dohvatiTjedan();
+        await dohvatiDan();
       }
     };
 
@@ -189,17 +174,17 @@ const TjedniZadaci = () => {
 
   return (
     <>
-      <h1>Tjedni zadaci</h1>
+      <h1>Dnevni zadaci</h1>
       <div className='gumb-dodaj'>
         <Gumb tekst="Novi zadatak" poziv={() => setDodavanje(true)}/>
       </div>
-      <div className='tjedan'>
+      <div className='datum'>
         <div>
-          <Gumb tekst={'<'} poziv={postaviPrethodniTjedan}/>
+          <Gumb tekst={'<'} poziv={postaviPrethodniDan}/>
         </div>
-        <p className='tjedan-tekst'>{tjedan}</p>
+        <p className='datum-tekst'>{dan}</p>
         <div>
-          <Gumb tekst={'>'} poziv={postaviSljedeciTjedan} iskljucen={trenutniTjedan === tjedan}/>
+          <Gumb tekst={'>'} poziv={postaviSljedeciDan} iskljucen={trenutniDan === dan}/>
         </div>
       </div>
 
@@ -229,4 +214,4 @@ const TjedniZadaci = () => {
   )
 }
 
-export default TjedniZadaci
+export default DnevniZadaci

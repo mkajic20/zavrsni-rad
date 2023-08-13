@@ -1,6 +1,6 @@
 @import '../../theme.scss';
 
-.zadatak{
+.stavka{
   display: flex;
   align-items: center;
   margin-bottom: 10px;
@@ -8,12 +8,14 @@
   max-width: 500px;
   border-radius: 6px;
   padding: 5px;
+  height: 30px;
 
   &:hover{
     background-color: $siva;
     .ikona-brisanje {
-      display: block;
+      visibility: visible;
     }
+
   }
 
   input[type='checkbox'] {
@@ -48,9 +50,13 @@
   }
 
   &-detalji {
+    flex: 1; //da zauzme ostatak dostupnog prostora, u suprotnom se potvrdni okvir smanji u širini
+    justify-content: center;
     display: flex;
     flex-direction: column;
     width: 100%;
+    height: 100%;
+    padding-left: 10px;
   }
 
   &-naslov {
@@ -67,9 +73,15 @@
   
 
 .ikona-brisanje {
-  width: 30px;
-  display: none;
+  width: 28px;
+  visibility: hidden;
 
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.promjena-pokazivaca {
   &:hover {
     cursor: pointer;
   }

@@ -2,11 +2,11 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import './Odjeljak.scss'
 
-const Odjeljak = props => {
+const Odjeljak = ({ naslov, children}) => {
   return (
     <div className='odjeljak'>
-        <h2 className='odjeljak-naslov'>{props.naslov}</h2>
-        {props.children}
+        <h2 className='odjeljak-naslov'>{naslov}</h2>
+        {children}
     </div>
   )
 }

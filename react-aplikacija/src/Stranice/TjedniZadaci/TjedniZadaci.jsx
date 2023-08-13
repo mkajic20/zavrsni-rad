@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react'
 import './TjedniZadaci.scss'
 import Gumb from '../../Komponente/Gumb/Gumb'
 import { formatirajDatum } from '../../PomocneFunkcije/datum';
-import Zadatak from '../../Komponente/Zadatak/Zadatak';
-import { dohvatiTjednePodatke } from '../../PomocneFunkcije/server';
-import KreiranjeZadatka from '../../Komponente/KreiranjeZadatka/KreiranjeZadatka';
+import Stavka from '../../Komponente/Stavka/Stavka';
+import { dohvatiTjednePodatke, dohvatiTjedneZadatke, kreirajTjedniZadatak, obrisiTjedniZadatak, promijeniStanjeTjednogZadatka } from '../../PomocneFunkcije/server';
+import ProzorKreiranje from '../../Komponente/ProzorKreiranje/ProzorKreiranje';
 import PotvrdniProzor from '../../Komponente/PotvrdniProzor/PotvrdniProzor';
 
 const TjedniZadaci = () => {
@@ -70,34 +70,15 @@ const TjedniZadaci = () => {
 
 
   const dohvatiZadatke = async () => {
-    //TODO: dohvatiti zadatke sa servera
-    //na serveru nece biti spremljen podatak zavrsen, vec ce to biti zasebna tablica, te se u ovoj funkciji treba dodati false na svaki zadatak
-    // (zato sto se dohvaca koji je oznacen u drugoj funkciji, a ako se tu ne stavi false svuda dobije se greska)
-    const zadaci = [
-      {id: 1, naslov: 'Zadatak 1', opis: 'Opis 1', zavrsen: false},
-      {id: 2, naslov: 'Zadatak 2', opis: 'Opis 2', zavrsen: false},
-      {id: 3, naslov: 'Zadatak 3', opis: 'Opis 3', zavrsen: false},
-      {id: 4, naslov: 'Zadatak 4', opis: 'Opis 4', zavrsen: false},
-      {id: 5, naslov: 'Zadatak 5', opis: 'Opis 5', zavrsen: false},
-      {id: 6, naslov: 'Zadatak 6', opis: 'Opis 6', zavrsen: false},
-      {id: 7, naslov: 'Zadatak 7', opis: 'Opis 7', zavrsen: false},
-      {id: 8, naslov: 'Zadatak 8', opis: 'Opis 8', zavrsen: false},
-      {id: 9, naslov: 'Zadatak 9', opis: 'Opis 9', zavrsen: false},
-      {id: 10, naslov: 'Zadatak 10', opis: 'Opis 10', zavrsen: false},
-      {id: 11, naslov: 'Zadatak 11', opis: 'Opis 11', zavrsen: false},
-      {id: 12, naslov: 'Zadatak 12', opis: 'Opis 12', zavrsen: false},
-    ]
-    setZadaci(zadaci);
+    const popisZadataka = await dohvatiTjedneZadatke();
+    setZadaci(popisZadataka);
     setZadaciUcitavanje(false);
   };
 
   const dohvatiPodatkeZaTjedan = async (tjedan) => {
-    //TODO: spremiti vec dohvacene podatke i napraviti provjeru da se ne dohvacaju podaci koji su vec dohvaceni
     const spremljeniZadatak = spremljeniZadaci.find((zadatak) => zadatak.tjedan === tjedan);
 
-    if (spremljeniZadatak) {
-      setZadaci(spremljeniZadatak.podaci);
-    } else {
+    if (!spremljeniZadatak) {
       const podaci = await dohvatiTjednePodatke(tjedan);
       let azuriraniZadaci;
 
@@ -113,7 +94,6 @@ const TjedniZadaci = () => {
       } else {
         azuriraniZadaci = zadaci.map((zadatak) => ({ ...zadatak, zavrsen: false }));
       }
-      setZadaci(azuriraniZadaci);
 
       const noviPodaci = {
         tjedan: tjedan,
@@ -123,16 +103,16 @@ const TjedniZadaci = () => {
     }
   }
 
-  const promijeniStanjeZadatka = (id, zavrsen) => {
-    //TODO: promijeniti stanje zadatka na serveru
-    //koristeci id, stanje te varijablu tjedan
-    //ako je zavrsen true, onda se mijenja stanje, a ako je false onda se brise 
+  const promijeniStanjeZadatka = async (id, zavrsen) => {
+    await promijeniStanjeTjednogZadatka(id, zavrsen, tjedan);
   }
 
-  const kreirajZadatak = (naslov, opis) => {
+  const kreirajZadatak = async (naslov, opis) => {
 
-    //TODO: Kreirati zadatak na serveru
-    //kod kreiranja odma treba dohvatiti kreirani zadatak, zato sto treba imati id
+    //TODO: umjesto noviZadatak koristiti kreiraniZadatak nakon implmenetacije na serveru
+    //TODO: dohvaceni zadatak nece imati zavrsen: false, to treba dodati u ovoj funkciji
+    //kada se zadatak dodaje u varijablu zadaci onda se ne dodaje false, kada se dodaje u spremljeni zadaci onda se dodaje
+    const kreiraniZadatak = await kreirajTjedniZadatak(naslov, opis);
 
     const noviZadatak = {
       id: zadaci.length + 2,
@@ -142,10 +122,10 @@ const TjedniZadaci = () => {
     };
   
     const azuriraniSpremljeniZadaci = spremljeniZadaci.map((spremljeni) => {
-        return {
-          ...spremljeni,
-          podaci: [...spremljeni.podaci, noviZadatak],
-        };
+      return {
+        ...spremljeni,
+        podaci: [...spremljeni.podaci, noviZadatak],
+      };
     });
 
     setZadaci((stariZadaci) => [...stariZadaci, noviZadatak]);
@@ -154,10 +134,10 @@ const TjedniZadaci = () => {
   }
 
   const obrisiZadatak = () => {
-    // TODO: Obrisati zadatak na serveru
     const id = zadatakZaBrisanje;
-    const azuriraniZadaci = zadaci.filter((zadatak) => zadatak.id !== id);
+    obrisiTjedniZadatak(id);
 
+    const azuriraniZadaci = zadaci.filter((zadatak) => zadatak.id !== id);
     const azuriraniSpremljeniZadaci = spremljeniZadaci.map((spremljeni) => ({
       ...spremljeni,
       podaci: spremljeni.podaci.filter((zadatak) => zadatak.id !== id),
@@ -191,7 +171,7 @@ const TjedniZadaci = () => {
     <>
       <h1>Tjedni zadaci</h1>
       <div className='gumb-dodaj'>
-        <Gumb tekst="Novi zadatak" poziv={() => setDodavanje(true)}/>
+        <Gumb tekst="Dodaj novi" poziv={() => setDodavanje(true)}/>
       </div>
       <div className='tjedan'>
         <div>
@@ -203,21 +183,40 @@ const TjedniZadaci = () => {
         </div>
       </div>
 
-      {zadaci.map((zadatak) => (
-      <Zadatak
-        key={zadatak.id}
-        naslov={zadatak.naslov}
-        opis={zadatak.opis}
-        zavrsen={zadatak.zavrsen}
-        promijeniStanje={() => {zadatak.zavrsen = !zadatak.zavrsen; setZadaci([...zadaci]); promijeniStanjeZadatka(zadatak.id, zadatak.zavrsen)}}
-        brisanje={() => {
-          setBrisanje(true); 
-          setZadatakZaBrisanje(zadatak.id);
-        }}
-      />
-      ))}
+      {spremljeniZadaci
+        .filter((spremljeni) => spremljeni.tjedan === tjedan)
+        .map((spremljeni) =>
+          spremljeni.podaci.map((zadatak) => (
+            <Stavka
+              key={zadatak.id}
+              naslov={zadatak.naslov}
+              opis={zadatak.opis}
+              zavrsen={zadatak.zavrsen}
+              promijeniStanje={() => {
+                const azuriraniZadaci = spremljeniZadaci.map((spremljeniTjedan) =>
+                  spremljeniTjedan.tjedan === tjedan
+                    ? {
+                        ...spremljeniTjedan,
+                        podaci: spremljeniTjedan.podaci.map((podatak) =>
+                          podatak.id === zadatak.id
+                            ? { ...podatak, zavrsen: !podatak.zavrsen }
+                            : podatak
+                        ),
+                      }
+                    : spremljeniTjedan
+                );
+                setSpremljeniZadaci(azuriraniZadaci);
+                promijeniStanjeZadatka(zadatak.id, !zadatak.zavrsen);
+              }}
+              brisanje={() => {
+                setBrisanje(true);
+                setZadatakZaBrisanje(zadatak.id);
+              }}
+            />
+          ))
+        )}
 
-      {dodavanje && <KreiranjeZadatka odustani={() => {setDodavanje(false)}} kreiraj={kreirajZadatak}/>}
+      {dodavanje && <ProzorKreiranje odustani={() => {setDodavanje(false)}} kreiraj={kreirajZadatak}/>}
 
       {brisanje && 
       <PotvrdniProzor 

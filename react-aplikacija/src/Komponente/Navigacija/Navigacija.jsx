@@ -1,39 +1,40 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import './Navigacija.scss'
+import { useNavigate } from "react-router-dom";
 
-const Navigacija = props => {
-
-  //TODO: ucitati popis projekata sa servera i prikazati ih u navigaciji
-  //potencijalno ih ne pokazati jer ce ih mozda biti previse da bi svi stali u navigaciju, u tom slucaju pokazati nekoliko / napraviti kategoriju
-
-  //TODO: ucitati popis kategorija biljeski sa servera i prikazati ih u navigaciji
-  //prilikom registracije korisnika automatski dodati kategoriju Favoriti
+const Navigacija = ({ popisProjekata, popisKategorija }) => {
+  const navigacija = useNavigate();
   
   return (
     <div className="navigacija">
       <section>
-        <h3>Zadaci</h3>
-        <a href="/trajni-zadaci">Trajni</a> 
-        <a href="/tjedni-zadaci">Tjedni</a>
-        <a href="/dnevni-zadaci">Dnevni</a>
+        <h3 className='navigacija-naslov'>Zadaci</h3>
+        <a className='navigacija-poveznica' onClick={() => {navigacija(`/trajni-zadaci`)}}>Trajni</a> 
+        <a className='navigacija-poveznica' onClick={() => {navigacija(`/tjedni-zadaci`)}}>Tjedni</a>
+        <a className='navigacija-poveznica' onClick={() => {navigacija(`/dnevni-zadaci`)}}>Dnevni</a>
       </section>
 
       <section>
-        <a href="/projekti"><h3>Projekti</h3></a>
-        <a href="/projekti/1">Projekt 1</a> 
-        <a href="/projekti/2">Projekt 2</a>
+        <a className='navigacija-poveznica' onClick={() => {navigacija(`/projekti`)}}><h3 className='navigacija-naslov'>Projekti</h3></a>
+        {popisProjekata.map(projekt => 
+          <a className='navigacija-poveznica' key={projekt.id} onClick={() => {navigacija(`/projekti/${projekt.id}`)}}>{projekt.naziv}</a>
+        )} 
       </section>
 
       <section >
-        <a href="/biljeske"><h3>Bilješke</h3></a>
-        <a href="/biljeske/kategorija/1">Favoriti</a> 
-        <a href="/biljeske/kategorija/2">Kategorija 2</a>
+        <a className='navigacija-poveznica' onClick={() => {navigacija(`/biljeske`)}}><h3 className='navigacija-naslov'>Bilješke</h3></a>
+        {popisKategorija.map(kategorija =>
+          <a className='navigacija-poveznica' key={kategorija.id} onClick={() => {navigacija(`/biljeske/kategorija/${kategorija.id}`)}}>{kategorija.naziv}</a>
+        )}
       </section>
     </div>
   )
 }
 
-Navigacija.propTypes = {}
+Navigacija.propTypes = {
+  popisProjekata: PropTypes.array,
+  popisKategorija: PropTypes.array
+}
 
 export default Navigacija

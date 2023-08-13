@@ -1,10 +1,11 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import './TrajniZadaci.scss';
 import Odjeljak from '../../Komponente/Odjeljak/Odjeljak'
-import Zadatak from '../../Komponente/Zadatak/Zadatak'
+import Stavka from '../../Komponente/Stavka/Stavka'
 import Gumb from '../../Komponente/Gumb/Gumb';
-import KreiranjeZadatka from '../../Komponente/KreiranjeZadatka/KreiranjeZadatka';
+import ProzorKreiranje from '../../Komponente/ProzorKreiranje/ProzorKreiranje';
 import PotvrdniProzor from '../../Komponente/PotvrdniProzor/PotvrdniProzor';
+import { dohvatiTrajneZadatke, kreirajTrajniZadatak, obrisiTrajniZadatak, promijeniStanjeTrajnogZadatka } from '../../PomocneFunkcije/server';
 
 export const TrajniZadaci = () => {
   const [zavrseniZadaci, setZavrseniZadaci] = useState([]);
@@ -14,28 +15,9 @@ export const TrajniZadaci = () => {
   const [zadatakZaBrisanje, setZadatakZaBrisanje] = useState(null);
 
 
-  const ucitajZadatke = () => {
+  const ucitajZadatke = async () => {
 
-    //TODO: Učitati zadatke sa servera
-
-    const zadaci = 
-    [{ id: 1, naslov: 'Zadatak 1', opis: 'Opis opis opis opis opis opis Opis opis opis opis opis opis', zavrsen: true},
-    { id: 2, naslov: 'Zadatak 2', opis: 'Opis opis opis opis opis opis Opis opis opis opis opis opis', zavrsen: true},
-    { id: 3, naslov: 'Zadatak 3', opis: 'Opis opis opis opis opis opis Opis opis opis opis opis opis', zavrsen: true},
-    { id: 4, naslov: 'Zadatak 4', opis: 'Opis opis opis opis opis opis Opis opis opis opis opis opis', zavrsen: true},
-    { id: 5, naslov: 'Zadatak 5', opis: 'Opis opis opis opis opis opis Opis opis opis opis opis opis', zavrsen: true},
-    { id: 6, naslov: 'Zadatak 6', opis: 'Opis opis opis opis opis opis Opis opis opis opis opis opis', zavrsen: true},
-    { id: 7, naslov: 'Zadatak 7', opis: 'Opis opis opis opis opis opis Opis opis opis opis opis opis', zavrsen: true},
-    { id: 8, naslov: 'Zadatak 8', opis: 'Opis opis opis opis opis opis Opis opis opis opis opis opis', zavrsen: true},
-    { id: 9, naslov: 'Zadatak 9', opis: 'Opis opis opis opis opis opis Opis opis opis opis opis opis', zavrsen: false},
-    { id: 10, naslov: 'Zadatak 10', opis: 'Opis opis opis opis opis opis Opis opis opis opis opis opis', zavrsen: false},
-    { id: 11, naslov: 'Zadatak 11', opis: 'Opis opis opis opis opis opis Opis opis opis opis opis opis', zavrsen: false},
-    { id: 12, naslov: 'Zadatak 12', opis: 'Opis opis opis opis opis opis Opis opis opis opis opis opis', zavrsen: false},
-    { id: 13, naslov: 'Zadatak 13', opis: 'Opis opis opis opis opis opis Opis opis opis opis opis opis', zavrsen: false},
-    { id: 14, naslov: 'Zadatak 14', opis: 'Opis opis opis opis opis opis Opis opis opis opis opis opis', zavrsen: false},
-    { id: 15, naslov: 'Zadatak 15', opis: 'Opis opis opis opis opis opis Opis opis opis opis opis opis', zavrsen: false},
-    { id: 16, naslov: 'Zadatak 16', opis: 'Opis opis opis opis opis opis Opis opis opis opis opis opis', zavrsen: false},];
-
+    const zadaci = await dohvatiTrajneZadatke();
     const zavrseniZadaci = zadaci.filter((zadatak) => zadatak.zavrsen);
     const nezavrseniZadaci = zadaci.filter((zadatak) => !zadatak.zavrsen);
 
@@ -43,30 +25,34 @@ export const TrajniZadaci = () => {
     setNezavrseniZadaci(nezavrseniZadaci);  
   }
 
-  const promijeniStanje = (id) => {
+  const promijeniStanje = async (id, novoStanje) => {
+    console.log("poziv");
 
-    //TODO: Promijeniti stanje zadatka na serveru
+    await promijeniStanjeTrajnogZadatka(id, novoStanje);
 
-    const updatedZadaci = zavrseniZadaci
+    const azuriraniZadaci = zavrseniZadaci
       .concat(nezavrseniZadaci)
       .map((zadatak) => {
         if (zadatak.id === id) {
-          return { ...zadatak, zavrsen: !zadatak.zavrsen };
+          return { ...zadatak, zavrsen: novoStanje };
         }
         return zadatak;
       });
 
-    const azuriraniZavrseniZadaci = updatedZadaci.filter((zadatak) => zadatak.zavrsen);
-    const azuriraniNezavrseniZadaci = updatedZadaci.filter((zadatak) => !zadatak.zavrsen);
+    const azuriraniZavrseniZadaci = azuriraniZadaci.filter((zadatak) => zadatak.zavrsen);
+    const azuriraniNezavrseniZadaci = azuriraniZadaci.filter((zadatak) => !zadatak.zavrsen);
 
     setZavrseniZadaci(azuriraniZavrseniZadaci);
     setNezavrseniZadaci(azuriraniNezavrseniZadaci);
   };
 
-  const kreirajZadatak = (naslov, opis) => {
+  const kreirajZadatak = async (naslov, opis) => {
 
-    //TODO: Kreirati zadatak na serveru
-    //kod kreiranja odma treba dohvatiti kreirani zadatak, zato sto treba imati id
+    //TODO: umjesto noviZadatak koristiti kreiraniZadatak nakon implmenetacije na serveru
+    //TODO: dohvaceni zadatak nece imati zavrsen: false, to treba dodati u ovoj funkciji
+    //kada se zadatak dodaje u varijablu zadaci onda se ne dodaje false, kada se dodaje u spremljeni zadaci onda se dodaje
+    
+    const kreiraniZadatak = await kreirajTrajniZadatak(naslov, opis);
 
     const noviZadatak = {
       id: zavrseniZadaci.length + nezavrseniZadaci.length + 1,
@@ -79,10 +65,11 @@ export const TrajniZadaci = () => {
     setDodavanje(false);
   }
 
-  const obrisiZadatak = () => {
-    // TODO: Obrisati zadatak na serveru
+  const obrisiZadatak = async () => {
     const id = zadatakZaBrisanje;
-  
+
+    await obrisiTrajniZadatak(id);
+    
     const indeksZadatka = zavrseniZadaci.findIndex((zadatak) => zadatak.id === id);
     const zadatakZavrsen = indeksZadatka !== -1;
   
@@ -97,7 +84,14 @@ export const TrajniZadaci = () => {
     setBrisanje(false);
   };
 
-  useState(ucitajZadatke);
+  useEffect(() => {
+    const asinkroniDohvat = async () => {
+      await ucitajZadatke();
+    };
+
+    asinkroniDohvat();
+  }, []);
+
 
   return (
     <>
@@ -108,12 +102,12 @@ export const TrajniZadaci = () => {
       <div className='zadaci'>
         <Odjeljak naslov='Nezavršeni'>
         {nezavrseniZadaci.map((zadatak) => (
-          <Zadatak
+          <Stavka
             key={zadatak.id}
             naslov={zadatak.naslov}
             opis={zadatak.opis}
             zavrsen={zadatak.zavrsen}
-            promijeniStanje={() => promijeniStanje(zadatak.id)}
+            promijeniStanje={() => promijeniStanje(zadatak.id, !zadatak.zavrsen)}
             brisanje={() => {
               setBrisanje(true); 
               setZadatakZaBrisanje(zadatak.id);
@@ -124,12 +118,12 @@ export const TrajniZadaci = () => {
 
       <Odjeljak naslov='Završeni'>
         {zavrseniZadaci.map((zadatak) => (
-          <Zadatak
+          <Stavka
             key={zadatak.id}
             naslov={zadatak.naslov}
             opis={zadatak.opis}
             zavrsen={zadatak.zavrsen}
-            promijeniStanje={() => promijeniStanje(zadatak.id)}
+            promijeniStanje={() => promijeniStanje(zadatak.id, !zadatak.zavrsen)}
             brisanje={() => {
               setBrisanje(true); 
               setZadatakZaBrisanje(zadatak.id);
@@ -139,7 +133,7 @@ export const TrajniZadaci = () => {
       </Odjeljak>
       </div>
 
-      {dodavanje && <KreiranjeZadatka odustani={() => {setDodavanje(false)}} kreiraj={kreirajZadatak}/>}
+      {dodavanje && <ProzorKreiranje naslov="Novi zadatak" odustani={() => {setDodavanje(false)}} kreiraj={kreirajZadatak}/>}
       {brisanje && 
       <PotvrdniProzor 
         tekst="Želite li obrisati zadatak?" 

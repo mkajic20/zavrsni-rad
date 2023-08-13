@@ -8,7 +8,6 @@
     position: fixed;
     color: white;
     z-index: 9999;
-
 }
 
 section {
@@ -16,9 +15,23 @@ section {
     display: flex;
     flex-direction: column;
     margin-top: 20px;
+    &:first-child {
+        margin-top: 50px;
+    }
 }
 
-a {
+.navigacija-poveznica {
     text-decoration: none;
     color: white;
+    font-size: 18px;
+    font-weight: bold;
+
+    &:hover {
+        cursor: pointer;
+        background-color: $tamnoSiva;
+    }
+}
+
+.navigacija-naslov {
+    font-size: 25px;
 }

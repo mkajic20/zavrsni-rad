@@ -9,6 +9,8 @@ const ProzorKreiranje = ({ naslov, kreiraj, odustani, sekundarni }) => {
   const [opis, setOpis] = useState('');
   const [opisGreska, setOpisGreska] = useState('');
 
+  //TODO: napraviti da se maksimalna duljina naslova i opisa proslijedi umjesto da je hardkodirana
+
   const validacijaNaziva = () => {
     if (!naziv) {
       setNazivGreska('Morate unijeti naziv');

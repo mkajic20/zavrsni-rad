@@ -3,13 +3,13 @@ import './App.scss';
 import Navigacija from './Komponente/Navigacija/Navigacija';
 import Zaglavlje from './Komponente/Zaglavlje/Zaglavlje';
 import DnevniZadaci from './Stranice/DnevniZadaci/DnevniZadaci';
-import { Projekt } from './Stranice/Projekt/Projekt';
 import Projekti from './Stranice/Projekti/Projekti';
 import TjedniZadaci from './Stranice/TjedniZadaci/TjedniZadaci';
 import { TrajniZadaci } from './Stranice/TrajniZadaci/TrajniZadaci';
 import { Route, Routes } from 'react-router-dom';
 import { brisanjeProjekta, dohvatiKategorijeBiljeski, dohvatiPopisProjekata, kreirajProjekt } from './PomocneFunkcije/server';
 import Biljeske from './Stranice/Biljeske/Biljeske';
+import Projekt from './Stranice/Projekt/Projekt';
 
 function App() {
   //TODO: napraviti dohvat projekata i kategorija biljeski tek nakon sto se korisnik prijavi / registrira
@@ -64,7 +64,7 @@ function App() {
           <Route path="/tjedni-zadaci" element={<TjedniZadaci />}/>
           <Route path="/dnevni-zadaci" element={<DnevniZadaci />}/>
           <Route path="/projekti" element={<Projekti popisProjekata={projekti} dodajProjekt={dodajProjekt} obrisiProjekt={obrisiProjekt} />}/>
-          <Route path="/projekti/:id" element={<Projekt />} />
+          <Route path="/projekti/:id" element={<Projekt/>} />
           <Route path="/biljeske" element={<Biljeske />} />
 
         </Routes>

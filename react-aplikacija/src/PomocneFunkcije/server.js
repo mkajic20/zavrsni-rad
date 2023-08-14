@@ -223,6 +223,40 @@ export const dohvatiStanjaZavrsenosti = async () => {
     ]
 }
 
+export const dohvatiProjekt = async (idProjekta) => {
+    //TODO: dohvatiti zadatke za projekt sa zadanim id-em sa servera
+    if(idProjekta == 1){
+        return {
+            naziv: 'Projekt 1',
+            zadaci: [
+                {id: 1, naslov: "Zadatak 1", opis: "Opis 1", stanje: 2},
+                {id: 2, naslov: "Zadatak 2", opis: "Opis 2", stanje: 2},
+                {id: 3, naslov: "Zadatak 3", opis: "Opis 3", stanje: 1},
+                {id: 4, naslov: "Zadatak 4", opis: "Opis 4", stanje: 3},
+                {id: 5, naslov: "Zadatak 5", opis: "Opis 5", stanje: 3},
+                {id: 6, naslov: "Zadatak 6", opis: "Opis 6", stanje: 3},
+                {id: 7, naslov: "Zadatak 7", opis: "Opis 7", stanje: 4},
+            ]};
+    } else if(idProjekta == 2){
+        return {
+            naziv: 'Projekt 1',
+            zadaci: [
+                {id: 1, naslov: "Zadatak 1", opis: "Opis 1", stanje: 3},
+                {id: 2, naslov: "Zadatak 2", opis: "Opis 2", stanje: 3},
+                {id: 3, naslov: "Zadatak 3", opis: "Opis 3", stanje: 2},
+                {id: 4, naslov: "Zadatak 4", opis: "Opis 4", stanje: 5},
+                {id: 5, naslov: "Zadatak 5", opis: "Opis 5", stanje: 5},
+                {id: 6, naslov: "Zadatak 6", opis: "Opis 6", stanje: 3},
+                {id: 7, naslov: "Zadatak 7", opis: "Opis 7", stanje: 4},
+            ]};
+    } else {
+        return {
+            naziv: 'Projekt 3',
+            zadaci: []
+        };
+    }
+}
+
 export const kreirajProjekt = async (naziv) => {
     //TODO: kreirati projekt na serveru te returnati novo kreirani projekt
     const noviProjekt = null;
@@ -233,6 +267,11 @@ export const brisanjeProjekta = async (id) => {
     //TODO: obrisati projekt sa zadanim id-em sa servera
 }
 
+export const kreirajProjektniZadatak = async (naslov, opis, stanje) => {
+    //TODO: dodati projektni zadatak na serveru te ga vratiti
+    const noviZadatak = null;
+    return noviZadatak;
+}
 
 //BILJESKE
 //---------------------------------------------

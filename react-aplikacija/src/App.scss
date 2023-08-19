@@ -9,6 +9,7 @@ html, body, #root {
     height: 100%;
     margin: 0;
     padding: 0;
+    overflow: hidden;
 }
 
 .navigacija {
@@ -24,5 +25,6 @@ html, body, #root {
   color: white;
   padding-top: 91px;
   height: 100%;
-  overflow: hidden; 
+  padding-bottom: 30px;
+  // overflow: hidden;
 }

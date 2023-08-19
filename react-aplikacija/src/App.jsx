@@ -7,16 +7,17 @@ import Projekti from './Stranice/Projekti/Projekti';
 import TjedniZadaci from './Stranice/TjedniZadaci/TjedniZadaci';
 import { TrajniZadaci } from './Stranice/TrajniZadaci/TrajniZadaci';
 import { Route, Routes } from 'react-router-dom';
-import { brisanjeProjekta, dohvatiKategorijeBiljeski, dohvatiPopisProjekata, kreirajProjekt } from './PomocneFunkcije/server';
+import { brisanjeProjekta, dohvatiBiljeskeFavorite, dohvatiKategorijeBiljeski, dohvatiPopisProjekata, kreirajProjekt } from './PomocneFunkcije/server';
 import Biljeske from './Stranice/Biljeske/Biljeske';
 import Projekt from './Stranice/Projekt/Projekt';
 
 function App() {
   //TODO: napraviti dohvat projekata i kategorija biljeski tek nakon sto se korisnik prijavi / registrira
   //TODO: kreirati putanju za '/'
+  //TODO: popraviti overflow
 
   const [projekti, setProjekti] = useState([]);
-  const [kategorijeBiljeski, setKategorijeBiljeski] = useState([]);
+  const [favoriti, setFavoriti] = useState([]);
 
   const dohvatiProjekte = async () => {
     const popisProjekata = await dohvatiPopisProjekata();
@@ -40,16 +41,26 @@ function App() {
     setProjekti(noviProjekti);
   }
 
-  const dohvatiPopisKategorija = async () => {
-    const popisKategorija = await dohvatiKategorijeBiljeski();
-    setKategorijeBiljeski(popisKategorija);
+  const dohvatiPopisFavorita = async () => {
+    const popisFavorita = await dohvatiBiljeskeFavorite();
+    setFavoriti(popisFavorita);
   }
+
+  const promijeniFavorit = (biljeska, novoStanje) => {
+    if(novoStanje){
+      setFavoriti(prevPopisFavorita => [...prevPopisFavorita, biljeska]); 
+    } else {
+      setFavoriti(prevPopisFavorita => prevPopisFavorita.filter(favorit => favorit.id !== biljeska.id));
+    }
+  }
+
+  
   
   useEffect(() => {
     const asinkroniDohvat = async () => {
-      await dohvatiProjekte();
-      await dohvatiPopisKategorija();
-    };
+    await dohvatiProjekte();
+    await dohvatiPopisFavorita();
+  };
 
     asinkroniDohvat();
   }, []);
@@ -57,7 +68,7 @@ function App() {
   return (
     <>
       <Zaglavlje className='zaglavlje' />
-      <Navigacija className='navigacija' popisProjekata={projekti} popisKategorija={kategorijeBiljeski} />
+      <Navigacija className='navigacija' popisProjekata={projekti} popisFavorita={favoriti} />
       <main className='stranica'>
         <Routes>
           <Route path="/trajni-zadaci" element={<TrajniZadaci />}/>
@@ -65,7 +76,7 @@ function App() {
           <Route path="/dnevni-zadaci" element={<DnevniZadaci />}/>
           <Route path="/projekti" element={<Projekti popisProjekata={projekti} dodajProjekt={dodajProjekt} obrisiProjekt={obrisiProjekt} />}/>
           <Route path="/projekti/:id" element={<Projekt/>} />
-          <Route path="/biljeske" element={<Biljeske />} />
+          <Route path="/biljeske" element={<Biljeske favoritKlik={promijeniFavorit} />} />
 
         </Routes>
       </main>

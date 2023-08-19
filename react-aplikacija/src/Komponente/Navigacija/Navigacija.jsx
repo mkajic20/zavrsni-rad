@@ -3,8 +3,9 @@ import PropTypes from 'prop-types'
 import './Navigacija.scss'
 import { useNavigate } from "react-router-dom";
 
-const Navigacija = ({ popisProjekata, popisKategorija }) => {
+const Navigacija = ({ popisProjekata, popisFavorita }) => {
   const navigacija = useNavigate();
+  console.log(popisFavorita)
   
   return (
     <div className="navigacija">
@@ -24,8 +25,8 @@ const Navigacija = ({ popisProjekata, popisKategorija }) => {
 
       <section >
         <a className='navigacija-poveznica' onClick={() => {navigacija(`/biljeske`)}}><h3 className='navigacija-naslov'>Bilješke</h3></a>
-        {popisKategorija.map(kategorija =>
-          <a className='navigacija-poveznica' key={kategorija.id} onClick={() => {navigacija(`/biljeske/kategorija/${kategorija.id}`)}}>{kategorija.naziv}</a>
+        {popisFavorita.map(favorit =>
+          <a className='navigacija-poveznica' key={favorit.id} onClick={() => {navigacija(`/biljeske/${favorit.id}`)}}>{favorit.naslov}</a>
         )}
       </section>
     </div>
@@ -34,7 +35,7 @@ const Navigacija = ({ popisProjekata, popisKategorija }) => {
 
 Navigacija.propTypes = {
   popisProjekata: PropTypes.array,
-  popisKategorija: PropTypes.array
+  popisFavorita: PropTypes.array
 }
 
 export default Navigacija

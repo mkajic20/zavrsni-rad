@@ -1,0 +1,31 @@
+@import '../../theme.scss';
+
+.padajuci-odjeljak {
+    // background-color: $siva;
+    min-height: 60px;
+    border-radius: 15px;
+    box-sizing: border-box;
+    overflow: hidden;
+    border: 1px solid white;
+
+    &-naslov {
+        display: flex;
+        flex-direction: row;
+        gap: 30px;
+        align-items: center;
+        padding: 15px;
+
+        &:hover {
+            cursor: pointer;
+        }
+    }
+
+    &-djeca {
+        margin-top: 20px;
+        margin-left: 60px;
+    }
+}
+
+.rotiraj {
+    transform: rotate(90deg);
+}

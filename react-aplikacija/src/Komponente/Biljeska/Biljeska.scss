@@ -1,0 +1,45 @@
+@import '../../theme.scss';
+
+.biljeska{
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  font-family: Arial, sans-serif;
+  max-width: 500px;
+  border-radius: 6px;
+  padding: 5px;
+  height: 30px;
+
+  &:hover{
+    background-color: $siva;
+    cursor: pointer;
+    .ikona {
+      visibility: visible;
+    }
+
+  }
+
+    &-naslov {
+        flex: 1; //da zauzme ostatak dostupnog prostora, u suprotnom se potvrdni okvir smanji u širini
+        justify-content: center;
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        height: 100%;
+        padding-left: 10px;
+
+        font-weight: bold;
+        font-size: 16px;
+        margin-right: 10px;
+    }
+}
+  
+
+.ikona {
+  width: 28px;
+  visibility: hidden;
+
+  &:hover {
+    cursor: pointer;
+  }
+}

@@ -288,3 +288,74 @@ export const dohvatiKategorijeBiljeski = async () => {
     ];
     return kategorije;
 }
+
+export const dohvatiBiljeske = async () => {
+
+    //TODO: dohvatiti podatke sa servera, te ih na serveru spojiti sa kategorijama biljeski (kako bi se morao raditi samo jedan poziv)
+
+    const biljeske = [
+        {id: 1, naslov: 'Biljeska 1', sadrzaj: 'Sadrzaj 1'},
+        {id: 2, naslov: 'Biljeska 2', sadrzaj: 'Sadrzaj 2'},
+        {id: 3, naslov: 'Biljeska 3', sadrzaj: 'Sadrzaj 3'},
+        {id: 4, naslov: 'Biljeska 4', sadrzaj: 'Sadrzaj 4'},
+        {id: 5, naslov: 'Biljeska 5', sadrzaj: 'Sadrzaj 5'},
+    ]
+
+    const kategorijeBiljeski = [
+        {id: 1, idBiljeske: 1, idKategorije: 1},
+        {id: 2, idBiljeske: 2, idKategorije: 1},
+        {id: 3, idBiljeske: 5, idKategorije: 1},
+
+        {id: 4, idBiljeske: 1, idKategorije: 2},
+        {id: 5, idBiljeske: 3, idKategorije: 2},
+        {id: 6, idBiljeske: 4, idKategorije: 2},
+
+
+        {id: 7, idBiljeske: 2, idKategorije: 3},
+        {id: 8, idBiljeske: 5, idKategorije: 3},
+        
+
+        {id: 9, idBiljeske: 1, idKategorije: 9999},
+        {id: 10, idBiljeske: 2, idKategorije: 9999},
+        {id: 11, idBiljeske: 3, idKategorije: 9999},
+        {id: 12, idBiljeske: 4, idKategorije: 9999},
+        {id: 13, idBiljeske: 5, idKategorije: 9999},
+    ]
+
+    const spojeniPodaci = biljeske.map(biljeska => {
+        const zajednickeKategorije = kategorijeBiljeski.filter(kategorija => kategorija.idBiljeske === biljeska.id);
+        const favorit = zajednickeKategorije.some(kategorija => kategorija.idKategorije === 1);
+        
+        return {
+            ...biljeska,
+            kategorije: zajednickeKategorije,
+            favorit: favorit
+        };
+    });
+    
+
+    return spojeniPodaci;
+}
+
+export const promijeniFavorita = async (id, novoStanje) => {
+    if(novoStanje) {
+        //TODO: dodaj novi zapis u tablicu koja povezuje kategorije i biljeske, koristeci proslijedeni id i id kategorije Favoriti (1)
+    } else {
+        //TODO: obrisi zapis tablice koji povezuje tu biljesku i kategoriju Favoriti
+    }
+}
+
+export const kreirajKategorijuBiljeski = async (naziv) => {
+    //TODO: kreirati kategoriju na serveru te returnati novo kreiranu kategoriju
+    const novaKategorija = null;
+    return novaKategorija;
+}
+
+export const dohvatiBiljeskeFavorite = async () => {
+    //TODO: dohvatiti favorite sa servera
+    return [
+        {id: 1, naslov: 'Biljeska 1', sadrzaj: 'Sadrzaj 1'},
+        {id: 2, naslov: 'Biljeska 2', sadrzaj: 'Sadrzaj 2'},
+        {id: 5, naslov: 'Biljeska 5', sadrzaj: 'Sadrzaj 5'},
+    ];    
+}

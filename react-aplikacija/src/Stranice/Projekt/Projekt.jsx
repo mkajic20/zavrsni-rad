@@ -1,45 +1,76 @@
-import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
-import { dohvatiProjekt, dohvatiStanjaZavrsenosti, kreirajProjektniZadatak } from '../../PomocneFunkcije/server';
-import './Projekt.scss'
-import Odjeljak from '../../Komponente/Odjeljak/Odjeljak';
-import Stavka from '../../Komponente/Stavka/Stavka';
-import Gumb from '../../Komponente/Gumb/Gumb';
-import ProzorKreiranje from '../../Komponente/ProzorKreiranje/ProzorKreiranje';
+import React, { useEffect, useState } from "react";
+import PropTypes from "prop-types";
+import { useNavigate, useParams } from "react-router-dom";
+import {
+  dohvatiProjekt,
+  dohvatiStanjaZavrsenosti,
+  kreirajProjektniZadatak,
+  promijeniStanjeProjektnogZadatka,
+} from "../../PomocneFunkcije/server";
+import "./Projekt.scss";
+import Odjeljak from "../../Komponente/Odjeljak/Odjeljak";
+import Gumb from "../../Komponente/Gumb/Gumb";
+import ProzorKreiranje from "../../Komponente/ProzorKreiranje/ProzorKreiranje";
+import PotvrdniProzor from "../../Komponente/PotvrdniProzor/PotvrdniProzor";
+import ProjektniZadatak from "../../Komponente/ProjektniZadatak/ProjektniZadatak";
 
-const Projekt = () => {
-  const [nazivProjekta, setNazivProjekta] = useState('');
+const Projekt = ({ brisanjeProjekta }) => {
+  const [nazivProjekta, setNazivProjekta] = useState("");
   const [stanjaIzvrsenosti, setStanjaIzvrsenosti] = useState([]);
   const [zadaci, setZadaci] = useState([]);
   const [dodavanje, setDodavanje] = useState(false);
-
-  //TODO: napraviti opciju promijene stanja zadatka
+  const [brisanje, setBrisanje] = useState(false);
 
   const id = useParams().id;
-  
+  const navigacija = useNavigate();
 
   const dohvatProjekta = async () => {
     const projekt = await dohvatiProjekt(id);
     setNazivProjekta(projekt.naziv);
     setZadaci(projekt.zadaci);
-  }
+  };
 
   const dohvatStanjaIzvrsenosti = async () => {
     const stanja = await dohvatiStanjaZavrsenosti(id);
     setStanjaIzvrsenosti(stanja);
-  }
+  };
 
   const dodajZadatak = async (naslov, opis) => {
+    //TODO: koristiti kreiraniZadatak umjesto noviZadatak
     const kreiraniZadatak = await kreirajProjektniZadatak(naslov, opis, 1);
     const noviZadatak = {
       id: zadaci.length + 1,
       naslov: naslov,
       opis: opis,
-      stanje: 1
+      stanje: 1,
     };
     setZadaci([...zadaci, noviZadatak]);
     setDodavanje(false);
-  }
+  };
+
+  const klikLijevo = async (stanjeId, zadatakId) => {
+    const trenutnoStanje = stanjaIzvrsenosti.findIndex(stanje => stanje.id === stanjeId);    
+    const novoStanje = stanjaIzvrsenosti[trenutnoStanje - 1].id;
+    
+    await promijeniStanjeProjektnogZadatka(zadatakId, novoStanje);
+
+    const noviZadaci = zadaci.map(zadatak =>
+      zadatak.id === zadatakId ? { ...zadatak, stanje: novoStanje } : zadatak
+    );
+    setZadaci(noviZadaci);
+  };
+
+  const klikDesno = async (stanjeId, zadatakId) => {
+    const trenutnoStanje = stanjaIzvrsenosti.findIndex(stanje => stanje.id === stanjeId);    
+    const novoStanje = stanjaIzvrsenosti[trenutnoStanje + 1].id;
+    
+    await promijeniStanjeProjektnogZadatka(zadatakId, novoStanje);
+
+    const noviZadaci = zadaci.map(zadatak =>
+      zadatak.id === zadatakId ? { ...zadatak, stanje: novoStanje } : zadatak
+    );
+    setZadaci(noviZadaci);
+  };
 
   useEffect(() => {
     const asinkroniDohvat = async () => {
@@ -50,33 +81,67 @@ const Projekt = () => {
     asinkroniDohvat();
   }, [id]);
 
-  
-
   return (
     <>
       <h1>{nazivProjekta}</h1>
-      <div className='projekt-omotac-gumba'>
-        <Gumb tekst="Novi zadatak" poziv={() => {setDodavanje(true)}} />
-        <Gumb tekst="Obrisi projekt" />
+      <div className="projekt-omotac-gumba">
+        <Gumb
+          tekst="Novi zadatak"
+          poziv={() => {
+            setDodavanje(true);
+          }}
+        />
+        <Gumb
+          tekst="Obriši projekt"
+          poziv={() => {
+            setBrisanje(true);
+          }}
+        />
       </div>
-      <div className='omotac-zadataka'>
-        {stanjaIzvrsenosti.map((stanje) => (
+      <div className="omotac-zadataka">
+        {stanjaIzvrsenosti.map((stanje, idStanja, polje) => (
           <Odjeljak naslov={stanje.naziv} sekundarni key={stanje.id}>
-            {zadaci.filter(zadatak => zadatak.stanje == stanje.id).map((zadatak) => (
-              <Stavka key={zadatak.id} naslov={zadatak.naslov} opis={zadatak.opis} bezPotvrdnogOkvira/>
-            ))}
+            {zadaci
+              .filter((zadatak) => zadatak.stanje === stanje.id)
+              .map((zadatak) => (
+                <ProjektniZadatak
+                  key={zadatak.id}
+                  naslov={zadatak.naslov}
+                  opis={zadatak.opis}
+                  prikazanoLijevo={idStanja > 0}
+                  prikazanoDesno={idStanja < polje.length - 1}
+                  klikDesno={() => klikDesno(stanje.id, zadatak.id)}
+                  klikLijevo={() => klikLijevo(stanje.id, zadatak.id)}
+                />
+              ))}
           </Odjeljak>
         ))}
       </div>
 
-      {dodavanje && 
-        <ProzorKreiranje naslov="Novi zadatak" zatvori={() => setDodavanje(false)} kreiraj={dodajZadatak} />
-      }
+      {dodavanje && (
+        <ProzorKreiranje
+          naslov="Novi zadatak"
+          odustani={() => setDodavanje(false)}
+          kreiraj={dodajZadatak}
+        />
+      )}
+
+      {brisanje && (
+        <PotvrdniProzor
+          tekst="Želite li obrisati projekt?"
+          potvrdi={() => {
+            brisanjeProjekta(id);
+            navigacija("/projekti");
+          }}
+          odustani={() => setBrisanje(false)}
+        />
+      )}
     </>
-  )
-}
+  );
+};
 
 Projekt.propTypes = {
-}
+  brisanjeProjekta: PropTypes.func,
+};
 
-export default Projekt
+export default Projekt;

@@ -1,0 +1,57 @@
+@import "../../theme.scss";
+
+.projektni-zadatak {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  font-family: Arial, sans-serif;
+  max-width: 500px;
+  border-radius: 6px;
+  padding: 5px;
+  min-height: 30px;
+
+  &:hover {
+    background-color: $siva;
+    .ikona-brisanje {
+      visibility: visible;
+    }
+  }
+
+  &-lijevo {
+    rotate: 180deg;
+    &:hover {
+      cursor: pointer;
+    }
+  }
+
+    &-desno {
+        &:hover {
+        cursor: pointer;
+        }
+    }
+
+  &-detalji {
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    padding-left: 10px;
+    text-align: center;
+  }
+
+  &-naslov {
+    font-weight: bold;
+    font-size: 16px;
+    margin-right: 10px;
+  }
+
+  &-opis {
+    font-size: 14px;
+    color: #777;
+  }
+}
+
+.skrivena-strelica {
+    visibility: hidden;
+}

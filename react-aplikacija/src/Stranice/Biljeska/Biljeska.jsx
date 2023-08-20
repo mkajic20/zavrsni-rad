@@ -28,7 +28,7 @@ const Biljeska = ({ promijeniFavorita }) => {
     setBiljeska(podaci);
     setTekst(podaci.sadrzaj);
     setKategorijeBiljeske(podaci.kategorije || []);
-    setFavorit(kategorijeBiljeske.includes(1));
+    setFavorit(podaci.kategorije.includes(1));
   };
 
   const spremiPromjene = async () => {
@@ -80,6 +80,7 @@ const Biljeska = ({ promijeniFavorita }) => {
                 kategorija.id !== 9999 &&
                 kategorija.id !== 1 && (
                   <Stavka
+                    key={kategorija.id}
                     bezBrisanja
                     bezOpisa
                     naslov={kategorija.naziv}

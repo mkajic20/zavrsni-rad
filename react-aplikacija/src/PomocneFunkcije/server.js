@@ -4,6 +4,14 @@
 export const prijaviKorisnika = async (korime, lozinka) => {
     //TODO: provjeriti korisnika na serveru
     //TODO: vratiti id i token za korisnika te ih spremiti u localStorage
+
+    if(korime === 'korisnik' && lozinka === 'lozinka'){
+        return true;
+    } else {
+        return false;
+    }
+
+    
 }
 
 export const registrirajKorisnika = async (korime, lozinka) => {
@@ -13,9 +21,14 @@ export const registrirajKorisnika = async (korime, lozinka) => {
     //ili implementirati da su kreirani jednom za sve korisnike, te kada se dohvacaju sve kategorije za korisnika takoder se dohvate i te kategorije
     
     //TODO: vratiti id i token za korisnika te ih spremiti u localStorage
+    if(korime !== 'korisnik'){
+        return true;
+    } else {
+        return false;
+    }
 }
 
-export const odjaviKorisnika = async () => {
+export const odjaviKorisnika = () => {
     //TODO: obrisati token i id korisnika iz localStorage
 }
 
@@ -239,7 +252,7 @@ export const dohvatiProjekt = async (idProjekta) => {
             ]};
     } else if(Number(idProjekta) === 2){
         return {
-            naziv: 'Projekt 1',
+            naziv: 'Projekt 2',
             zadaci: [
                 {id: 1, naslov: "Zadatak 1", opis: "Opis 1", stanje: 3},
                 {id: 2, naslov: "Zadatak 2", opis: "Opis 2", stanje: 3},
@@ -271,6 +284,10 @@ export const kreirajProjektniZadatak = async (naslov, opis, stanje) => {
     //TODO: dodati projektni zadatak na serveru te ga vratiti
     const noviZadatak = null;
     return noviZadatak;
+}
+
+export const promijeniStanjeProjektnogZadatka = async (id, novoStanje) => {
+    //TODO: promijeniti stanje projektnog zadatka na serveru
 }
 
 //BILJESKE

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import './ProzorKreiranje.scss';
 import Gumb from '../Gumb/Gumb';
+import TekstualnoPolje from '../TekstualnoPolje/TekstualnoPolje';
 
 const ProzorKreiranje = ({ naslov, kreiraj, odustani, sekundarni }) => {
   const [naziv, setNaziv] = useState('');
@@ -53,16 +54,13 @@ const ProzorKreiranje = ({ naslov, kreiraj, odustani, sekundarni }) => {
         <div className="forma">
           <label htmlFor="naziv">Naziv</label>
           <div>
-            <input
-            className={`polje-naziv ${nazivGreska ? 'neispravan-unos' : ''}`}
-            type="text"
-            id="naziv"
-            name="naziv"
-            placeholder="1 - 30 znakova"
-            onChange={(e) => setNaziv(e.target.value)}
-            onBlur={validacijaNaziva}
-            required
-          />
+            <TekstualnoPolje 
+              naziv="naziv"
+              validacija={validacijaNaziva}
+              neispravanUnos={nazivGreska}
+              promjena={(naziv) => setNaziv(naziv)}ž
+              poruka={"0 - 30 znakova"}
+            />
           {nazivGreska && <div className="poruka-greske">{nazivGreska}</div>}
           {!nazivGreska && <div className="pozicija-greske"></div>} 
           </div>

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import './Stavka.scss';
 import ikonaBrisanje from '../../Resursi/ikona-brisanje.png';
 
-const Stavka = ({ naslov, opis, zavrsen, promijeniStanje, brisanje, bezPotvrdnogOkvira, bezOpisa, klikPoziv}) => {
+const Stavka = ({ naslov, opis, zavrsen, promijeniStanje, brisanje, klikPoziv, bezPotvrdnogOkvira, bezOpisa, bezBrisanja}) => {
   const klasaStavke = `stavka ${klikPoziv ? 'promjena-pokazivaca' : ''}`;
 
   return (
@@ -17,7 +17,10 @@ const Stavka = ({ naslov, opis, zavrsen, promijeniStanje, brisanje, bezPotvrdnog
           <span className="stavka-opis">{opis}</span>
         }
       </div>
-      <img src={ikonaBrisanje} alt='Ikona za brisanje' className='ikona-brisanje' onClick={brisanje}/>
+      {!bezBrisanja && 
+        <img src={ikonaBrisanje} alt='Ikona za brisanje' className='ikona-brisanje' onClick={brisanje}/>
+      }
+      
     </div>
   );
 };

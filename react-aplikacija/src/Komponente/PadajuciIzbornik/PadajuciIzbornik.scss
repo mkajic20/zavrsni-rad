@@ -1,0 +1,38 @@
+@import '../../theme.scss';
+
+.padajuci-izbornik {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    background-color: $siva;
+    font-size: 15px;
+    font-weight: bold;
+    padding: 5px 15px;
+    border-radius: 10px;
+    position: relative;
+
+    &-gumbi {
+        display: flex;
+        justify-content: space-between;
+        
+        &:hover {
+            cursor: pointer;
+        }
+    }
+
+    &-slika {
+        rotate: 90deg;
+    }
+}
+
+.padajuci-izbornik-djeca {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background-color: $siva; 
+    border-radius: 10px;
+    padding: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    z-index: 1; 
+}

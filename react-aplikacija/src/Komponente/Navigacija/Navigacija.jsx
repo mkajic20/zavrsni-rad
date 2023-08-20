@@ -5,28 +5,27 @@ import { useNavigate } from "react-router-dom";
 
 const Navigacija = ({ popisProjekata, popisFavorita }) => {
   const navigacija = useNavigate();
-  console.log(popisFavorita)
   
   return (
     <div className="navigacija">
       <section>
         <h3 className='navigacija-naslov'>Zadaci</h3>
-        <a className='navigacija-poveznica' onClick={() => {navigacija(`/trajni-zadaci`)}}>Trajni</a> 
-        <a className='navigacija-poveznica' onClick={() => {navigacija(`/tjedni-zadaci`)}}>Tjedni</a>
-        <a className='navigacija-poveznica' onClick={() => {navigacija(`/dnevni-zadaci`)}}>Dnevni</a>
+        <p className='navigacija-poveznica' onClick={() => {navigacija(`/trajni-zadaci`)}}>Trajni</p> 
+        <p className='navigacija-poveznica' onClick={() => {navigacija(`/tjedni-zadaci`)}}>Tjedni</p>
+        <p className='navigacija-poveznica' onClick={() => {navigacija(`/dnevni-zadaci`)}}>Dnevni</p>
       </section>
 
       <section>
-        <a className='navigacija-poveznica' onClick={() => {navigacija(`/projekti`)}}><h3 className='navigacija-naslov'>Projekti</h3></a>
+        <h3 className='navigacija-poveznica navigacija-naslov' onClick={() => {navigacija(`/projekti`)}}>Projekti</h3>
         {popisProjekata.map(projekt => 
-          <a className='navigacija-poveznica' key={projekt.id} onClick={() => {navigacija(`/projekti/${projekt.id}`)}}>{projekt.naziv}</a>
+          <p className='navigacija-poveznica' key={projekt.id} onClick={() => {navigacija(`/projekti/${projekt.id}`)}}>{projekt.naziv}</p>
         )} 
       </section>
 
       <section >
-        <a className='navigacija-poveznica' onClick={() => {navigacija(`/biljeske`)}}><h3 className='navigacija-naslov'>Bilješke</h3></a>
+        <h3 className='navigacija-poveznica navigacija-naslov' onClick={() => {navigacija(`/biljeske`)}}>Bilješke</h3>
         {popisFavorita.map(favorit =>
-          <a className='navigacija-poveznica' key={favorit.id} onClick={() => {navigacija(`/biljeske/${favorit.id}`)}}>{favorit.naslov}</a>
+          <p className='navigacija-poveznica' key={favorit.id} onClick={() => {navigacija(`/biljeske/${favorit.id}`)}}>{favorit.naslov}</p>
         )}
       </section>
     </div>

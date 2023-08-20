@@ -225,7 +225,7 @@ export const dohvatiStanjaZavrsenosti = async () => {
 
 export const dohvatiProjekt = async (idProjekta) => {
     //TODO: dohvatiti zadatke za projekt sa zadanim id-em sa servera
-    if(idProjekta == 1){
+    if(Number(idProjekta) === 1){
         return {
             naziv: 'Projekt 1',
             zadaci: [
@@ -237,7 +237,7 @@ export const dohvatiProjekt = async (idProjekta) => {
                 {id: 6, naslov: "Zadatak 6", opis: "Opis 6", stanje: 3},
                 {id: 7, naslov: "Zadatak 7", opis: "Opis 7", stanje: 4},
             ]};
-    } else if(idProjekta == 2){
+    } else if(Number(idProjekta) === 2){
         return {
             naziv: 'Projekt 1',
             zadaci: [
@@ -322,6 +322,7 @@ export const dohvatiBiljeske = async () => {
         {id: 13, idBiljeske: 5, idKategorije: 9999},
     ]
 
+    //TODO: kod spajanja uzeti samo id kategorije umjesto cijelog objekta, prilagoditi komponentu da tako radi
     const spojeniPodaci = biljeske.map(biljeska => {
         const zajednickeKategorije = kategorijeBiljeski.filter(kategorija => kategorija.idBiljeske === biljeska.id);
         const favorit = zajednickeKategorije.some(kategorija => kategorija.idKategorije === 1);
@@ -358,4 +359,30 @@ export const dohvatiBiljeskeFavorite = async () => {
         {id: 2, naslov: 'Biljeska 2', sadrzaj: 'Sadrzaj 2'},
         {id: 5, naslov: 'Biljeska 5', sadrzaj: 'Sadrzaj 5'},
     ];    
+}
+
+export const dohvatiBiljesku = async (id) => {
+    //TODO: dohvatiti biljesku sa servera, kao i njene kategorije
+
+    const biljeske = [
+        {id: 1, naslov: 'Biljeska 1', sadrzaj: 'Sadrzaj 1', kategorije: [1, 2, 9999]},
+        {id: 2, naslov: 'Biljeska 2', sadrzaj: 'Sadrzaj 2', kategorije: [1, 3, 9999]},
+        {id: 3, naslov: 'Biljeska 3', sadrzaj: 'Sadrzaj 3', kategorije: [2, 9999]},
+        {id: 4, naslov: 'Biljeska 4', sadrzaj: 'Sadrzaj 4', kategorije: [2, 9999]},
+        {id: 5, naslov: 'Biljeska 5', sadrzaj: 'Sadrzaj 5', kategorije: [1, 3, 9999]},
+    ]
+    
+    return biljeske.find(biljeska => biljeska.id === Number(id));
+}
+
+export const azurirajSadrzajBiljeske = async (id, sadrzaj) => {
+    //TODO: azurirati sadrzaj biljeske na serveru
+}
+
+export const azurirajKategorijuBiljeske = async (idBiljeske, idKategorije, kategorijaPostoji) => {
+    if(kategorijaPostoji){
+        //TODO: ukloniti kategoriju sa biljeske na serveru
+    } else {
+        //TODO: dodati kategoriju biljesci na serveru
+    }
 }

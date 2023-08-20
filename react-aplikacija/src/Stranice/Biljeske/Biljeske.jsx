@@ -14,12 +14,6 @@ import ProzorKreiranje from "../../Komponente/ProzorKreiranje/ProzorKreiranje";
 import { useNavigate } from "react-router-dom";
 
 const Biljeske = ({ favoritKlik }) => {
-  //TODO: implementirati dodavanje biljeski
-  //TODO: implementirati dodavanje kategorija
-  //TODO: implementirati brisanje kategorije
-
-  //TODO: prebaciti popisKategorija i kreriranje kategorija u komponentu, ukloniti ih iz navigacije
-  //TODO: u navigaciji prikazati popis favorita
 
   const [popisBiljeski, setPopisBiljeski] = useState([]);
   const [dodavanjeKategorije, setDodavanjeKategorije] = useState(false);
@@ -71,6 +65,7 @@ const Biljeske = ({ favoritKlik }) => {
         )
       );
     }
+
   };
 
   const novaKategorija = async (naziv) => {
@@ -78,11 +73,28 @@ const Biljeske = ({ favoritKlik }) => {
     const kreiranaKategorija = await kreirajKategorijuBiljeski(naziv);
     const novaKategorija = {
       id: popisKategorija.length + 1,
-      naziv: naziv,
+      naziv: naziv,  
     };
     setPopisKategorija([...popisKategorija, novaKategorija]);
     setDodavanjeKategorije(false);
   };
+
+  const novaBiljeska = async (naziv) => {
+    //TODO: umjesto novaBiljeska koristiti kreiranaBiljeska
+    const kreiranaBiljeska = await kreirajKategorijuBiljeski(naziv);
+    const novaBiljeska = {
+      id: popisBiljeski.length + 1,
+      naslov: naziv,
+      favorit: false,
+      kategorije: [
+        {id: 777, idBiljeske: popisKategorija.length + 1, idKategorije: 9999}
+      ]
+    };
+
+    setPopisBiljeski([...popisBiljeski, novaBiljeska]);
+    setDodavanjeBiljeske(false);
+    console.log(popisBiljeski)
+  }
 
   useEffect(() => {
     const asinkroniDohvat = async () => {
@@ -121,7 +133,6 @@ const Biljeske = ({ favoritKlik }) => {
                     (kat) => kat.idKategorije === kategorija.id
                   )
                 )
-
                 .map((biljeska) => (
                   <Biljeska
                     key={biljeska.id}
@@ -131,7 +142,7 @@ const Biljeske = ({ favoritKlik }) => {
                       promijeniStanjeFavorita(biljeska.id, !biljeska.favorit);
                     }}
                     klikPoziv={() => {
-                      navigacija(`/biljeske/${biljeska.id}`);
+                      navigacija(`${biljeska.id}`);
                     }}
                   />
                 ))}
@@ -144,6 +155,15 @@ const Biljeske = ({ favoritKlik }) => {
           naslov="Nova kategorija"
           odustani={() => setDodavanjeKategorije(false)}
           kreiraj={novaKategorija}
+          sekundarni
+        />
+      )}
+      
+      {dodavanjeBiljeske && (
+        <ProzorKreiranje
+          naslov="Nova biljeska"
+          odustani={() => setDodavanjeBiljeske(false)}
+          kreiraj={novaBiljeska}
           sekundarni
         />
       )}

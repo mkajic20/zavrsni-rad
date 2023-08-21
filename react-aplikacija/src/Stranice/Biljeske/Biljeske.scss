@@ -1,15 +1,23 @@
+@import '../../theme.scss';
+
 .biljeske-gumbi {
     display: flex;
     flex-direction: row;
     gap: 10px;
     max-width: 310px;
     margin-top: 30px;
+    width: 100%;
 }
 
 .biljeske-kategorije {
-    margin-right: 30px;
     display: flex;
     flex-direction: column;
     gap: 20px;
     margin-top: 20px;
+    width: 80vw;
+
+    @media screen and ($racunalo) {
+        width: 50vw;
+    }
+
 }

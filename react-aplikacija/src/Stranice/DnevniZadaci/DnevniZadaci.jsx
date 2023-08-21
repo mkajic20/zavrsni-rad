@@ -158,39 +158,41 @@ const DnevniZadaci = () => {
           <Gumb tekst={'>'} poziv={postaviSljedeciDan} iskljucen={trenutniDan === dan}/>
         </div>
       </div>
-      
-      {spremljeniZadaci
-        .filter((spremljeni) => spremljeni.dan === dan)
-        .map((spremljeni) =>
-          spremljeni.podaci.map((zadatak) => (
-            <Stavka
-              key={zadatak.id}
-              naslov={zadatak.naslov}
-              opis={zadatak.opis}
-              zavrsen={zadatak.zavrsen}
-              promijeniStanje={() => {
-                const azuriraniZadaci = spremljeniZadaci.map((spremljeniDan) =>
-                  spremljeniDan.dan === dan
-                    ? {
-                        ...spremljeniDan,
-                        podaci: spremljeniDan.podaci.map((podatak) =>
-                          podatak.id === zadatak.id
-                            ? { ...podatak, zavrsen: !podatak.zavrsen }
-                            : podatak
-                        ),
-                      }
-                    : spremljeniDan
-                );
-                setSpremljeniZadaci(azuriraniZadaci);
-                promijeniStanjeZadatka(zadatak.id, !zadatak.zavrsen);
-              }}
-              brisanje={() => {
-                setBrisanje(true);
-                setZadatakZaBrisanje(zadatak.id);
-              }}
-            />
-          ))
-        )}
+
+      <div className='dnevni-zadaci'> 
+        {spremljeniZadaci
+          .filter((spremljeni) => spremljeni.dan === dan)
+          .map((spremljeni) =>
+            spremljeni.podaci.map((zadatak) => (
+              <Stavka
+                key={zadatak.id}
+                naslov={zadatak.naslov}
+                opis={zadatak.opis}
+                zavrsen={zadatak.zavrsen}
+                promijeniStanje={() => {
+                  const azuriraniZadaci = spremljeniZadaci.map((spremljeniDan) =>
+                    spremljeniDan.dan === dan
+                      ? {
+                          ...spremljeniDan,
+                          podaci: spremljeniDan.podaci.map((podatak) =>
+                            podatak.id === zadatak.id
+                              ? { ...podatak, zavrsen: !podatak.zavrsen }
+                              : podatak
+                          ),
+                        }
+                      : spremljeniDan
+                  );
+                  setSpremljeniZadaci(azuriraniZadaci);
+                  promijeniStanjeZadatka(zadatak.id, !zadatak.zavrsen);
+                }}
+                brisanje={() => {
+                  setBrisanje(true);
+                  setZadatakZaBrisanje(zadatak.id);
+                }}
+              />
+            ))
+          )}
+        </div>
 
       {dodavanje && <ProzorKreiranje naslov="Novi dnevni zadatak" odustani={() => {setDodavanje(false)}} kreiraj={kreirajZadatak}/>}
 

@@ -1,3 +1,15 @@
+@import '../../theme.scss';
+
 .popis-projekata {
     margin-top: 20px;
+    width: 70vw;
+
+    @media screen and ($tablet) {
+        width: 50vw;
+    }
+
+
+    @media screen and ($racunalo) {
+        width: 30vw;
+    }
 }

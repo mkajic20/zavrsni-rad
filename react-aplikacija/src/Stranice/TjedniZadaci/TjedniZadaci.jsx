@@ -183,38 +183,40 @@ const TjedniZadaci = () => {
         </div>
       </div>
 
-      {spremljeniZadaci
-        .filter((spremljeni) => spremljeni.tjedan === tjedan)
-        .map((spremljeni) =>
-          spremljeni.podaci.map((zadatak) => (
-            <Stavka
-              key={zadatak.id}
-              naslov={zadatak.naslov}
-              opis={zadatak.opis}
-              zavrsen={zadatak.zavrsen}
-              promijeniStanje={() => {
-                const azuriraniZadaci = spremljeniZadaci.map((spremljeniTjedan) =>
-                  spremljeniTjedan.tjedan === tjedan
-                    ? {
-                        ...spremljeniTjedan,
-                        podaci: spremljeniTjedan.podaci.map((podatak) =>
-                          podatak.id === zadatak.id
-                            ? { ...podatak, zavrsen: !podatak.zavrsen }
-                            : podatak
-                        ),
-                      }
-                    : spremljeniTjedan
-                );
-                setSpremljeniZadaci(azuriraniZadaci);
-                promijeniStanjeZadatka(zadatak.id, !zadatak.zavrsen);
-              }}
-              brisanje={() => {
-                setBrisanje(true);
-                setZadatakZaBrisanje(zadatak.id);
-              }}
-            />
-          ))
-        )}
+      <div className='tjedni-zadaci'>
+        {spremljeniZadaci
+          .filter((spremljeni) => spremljeni.tjedan === tjedan)
+          .map((spremljeni) =>
+            spremljeni.podaci.map((zadatak) => (
+              <Stavka
+                key={zadatak.id}
+                naslov={zadatak.naslov}
+                opis={zadatak.opis}
+                zavrsen={zadatak.zavrsen}
+                promijeniStanje={() => {
+                  const azuriraniZadaci = spremljeniZadaci.map((spremljeniTjedan) =>
+                    spremljeniTjedan.tjedan === tjedan
+                      ? {
+                          ...spremljeniTjedan,
+                          podaci: spremljeniTjedan.podaci.map((podatak) =>
+                            podatak.id === zadatak.id
+                              ? { ...podatak, zavrsen: !podatak.zavrsen }
+                              : podatak
+                          ),
+                        }
+                      : spremljeniTjedan
+                  );
+                  setSpremljeniZadaci(azuriraniZadaci);
+                  promijeniStanjeZadatka(zadatak.id, !zadatak.zavrsen);
+                }}
+                brisanje={() => {
+                  setBrisanje(true);
+                  setZadatakZaBrisanje(zadatak.id);
+                }}
+              />
+            ))
+          )}
+        </div>
 
       {dodavanje && <ProzorKreiranje odustani={() => {setDodavanje(false)}} kreiraj={kreirajZadatak}/>}
 

@@ -9,21 +9,38 @@ html, body, #root {
     height: 100%;
     margin: 0;
     padding: 0;
-    overflow: hidden;
+
+    @media screen and ($racunalo) {
+        overflow: hidden;
+    }
 }
 
-.navigacija {
-  margin-top: 61px;
+.navigacija-sakrij {
+  display: none;
+  @media screen and ($racunalo) {
+    margin-top: 61px;
+    display: block;
+  }
 }
 
 .stranica {
   background-color: $tamnoSiva;
   flex: 1;
   overflow-y: auto;
-  padding-left: 231px;
   color: white;
   padding-top: 91px;
   height: 100%;
   padding-bottom: 30px;
-  overflow: hidden;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+
+
+  @media screen and ($racunalo) {
+    padding-left: 231px;
+    align-items:start;
+    overflow: hidden;
+    flex-direction: column;
+    padding-top: 30px;
+  } 
 }

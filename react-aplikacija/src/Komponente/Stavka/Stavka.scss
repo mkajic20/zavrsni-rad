@@ -9,13 +9,17 @@
   border-radius: 6px;
   padding: 5px;
   min-height: 30px;
+  background-color: $siva;
+  width: 100%;
 
-  &:hover{
-    background-color: $siva;
-    .ikona-brisanje {
-      visibility: visible;
+  @media screen and ($racunalo) {
+    background-color: transparent;
+    &:hover{
+      background-color: $siva;
+      .ikona-brisanje {
+        visibility: visible;
+      }
     }
-
   }
 
   input[type='checkbox'] {
@@ -74,11 +78,14 @@
 
 .ikona-brisanje {
   width: 28px;
-  visibility: hidden;
+  @media screen and ($racunalo) {
+    visibility: hidden;
 
-  &:hover {
-    cursor: pointer;
+    &:hover {
+      cursor: pointer;
+    }
   }
+  
 }
 
 .promjena-pokazivaca {

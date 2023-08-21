@@ -57,7 +57,7 @@ const ProzorKreiranje = ({ naslov, kreiraj, odustani, sekundarni }) => {
             <TekstualnoPolje 
               naziv="naziv"
               validacija={validacijaNaziva}
-              neispravanUnos={nazivGreska}
+              neispravanUnos={nazivGreska.length > 0}
               promjena={(naziv) => setNaziv(naziv)}ž
               poruka={"0 - 30 znakova"}
             />

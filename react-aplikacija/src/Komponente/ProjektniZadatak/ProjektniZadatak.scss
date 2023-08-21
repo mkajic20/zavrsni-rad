@@ -3,28 +3,41 @@
 .projektni-zadatak {
   display: flex;
   align-items: center;
-  margin-bottom: 10px;
   font-family: Arial, sans-serif;
   max-width: 500px;
   border-radius: 6px;
   padding: 5px;
   min-height: 30px;
+  flex-direction: column;
+  width: 100%;
+
+  @media screen and ($racunalo) {
+    flex-direction: row;
+    margin-bottom: 10px;
+  }
 
   &:hover {
     background-color: $siva;
-    .ikona-brisanje {
-      visibility: visible;
-    }
   }
 
   &-lijevo {
-    rotate: 180deg;
+    rotate: 270deg;
+
+    @media screen and ($racunalo) {
+      rotate: 180deg;
+    }
+
     &:hover {
       cursor: pointer;
     }
   }
 
     &-desno {
+      rotate: 90deg;
+
+    @media screen and ($racunalo) {
+      rotate: 0deg;
+    }
         &:hover {
         cursor: pointer;
         }

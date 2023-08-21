@@ -8,12 +8,12 @@ const ProjektniZadatak = ({naslov, opis, klikLijevo, klikDesno, prikazanoLijevo,
     const klaseDesno = prikazanoDesno ? 'projektni-zadatak-desno' : 'projektni-zadatak-desno skrivena-strelica';
   return (
     <div className='projektni-zadatak'>
-        <img src={ikonaStrelica} height={20} alt='Ikona za brisanje' className={klaseLijevo} onClick={klikLijevo}/>
+        <img src={ikonaStrelica} height={20} alt='Strelica lijevo' className={klaseLijevo} onClick={klikLijevo}/>
         <div className='projektni-zadatak-detalji'>
             <span className="projektni-zadatak-naslov">{naslov}</span>
           <span className="projektni-zadatak-opis">{opis}</span>
         </div>
-        <img src={ikonaStrelica} height={20} alt='Ikona za brisanje' className={klaseDesno} onClick={klikDesno}/>
+        <img src={ikonaStrelica} height={20} alt='Strelica desno' className={klaseDesno} onClick={klikDesno}/>
     </div>
   )
 }

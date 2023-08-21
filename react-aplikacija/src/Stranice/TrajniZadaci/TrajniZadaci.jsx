@@ -26,7 +26,6 @@ export const TrajniZadaci = () => {
   }
 
   const promijeniStanje = async (id, novoStanje) => {
-    console.log("poziv");
 
     await promijeniStanjeTrajnogZadatka(id, novoStanje);
 

@@ -76,24 +76,38 @@ function App() {
     asinkroniDohvat();
   }, [prijavljen]);
 
+
   return (
     <>
       {prijavljen && (
         <>
           <Zaglavlje className="zaglavlje" odjavi={() => setPrijavljen(false)}/>
-          <Navigacija
-            className="navigacija"
-            popisProjekata={projekti}
-            popisFavorita={favoriti}
-          />
+          <div className="navigacija-sakrij">
+            <Navigacija
+              popisProjekata={projekti}
+              popisFavorita={favoriti}
+            />
+          </div>
+          
         </>
       )}
 
       <main className="stranica">
+
+
         <Routes>
           <Route
             path="/"
-            element={<ZasticenaPutanja ispravan={prijavljen} putanja={"/prijava"}/>}
+            element={
+            <ZasticenaPutanja ispravan={prijavljen} putanja={"/prijava"} > 
+            {window.innerWidth < 1024 && 
+              <Navigacija
+                popisProjekata={projekti}
+                popisFavorita={favoriti}
+              />
+            }
+            
+            </ZasticenaPutanja>}
           />
           <Route
             path="/prijava"

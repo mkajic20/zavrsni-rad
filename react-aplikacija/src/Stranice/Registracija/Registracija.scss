@@ -2,8 +2,8 @@
 
 .registracija {
     background-color: $siva;
-    height: 50vh;
-    width: 25vw;
+    height: 40vh;
+    width: 70vw;
     border-radius: 10px;
     position: fixed;
     top: 50%;
@@ -16,19 +16,27 @@
     justify-content: space-between;
     font-weight: 700;
     font-size: 17px;
-    
-    
 
+    @media screen and ($tablet) {
+        height: 40vh;
+        width: 50vw;
+    }
 
+    @media screen and ($racunalo) {
+        height: 50vh;
+        width: 25vw;
+    }
+        
+    
     &-forma {
-        width: 70%;
+        width: 90%;
         display: flex;
         flex-direction: column;
         gap: 50px;
         height: 50%;
-
-        
-
+        @media screen and ($racunaloVeliko) {
+            width: 70%;
+        }
     }
 
     &-polje {

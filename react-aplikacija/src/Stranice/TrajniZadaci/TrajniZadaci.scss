@@ -1,3 +1,5 @@
+@import '../../theme.scss';
+
 .odjeljak {
     margin-top:30px;
 }
@@ -9,6 +11,15 @@
 
 .zadaci {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
     grid-column-gap: 30px;
+    margin: 0 30px;
+
+
+    @media screen and ($tablet) {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    @media screen and ($racunalo) {
+        margin: 0;
+    }
 }

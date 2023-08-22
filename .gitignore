@@ -24,7 +24,6 @@ dist-ssr
 /node_modules
 
 /build
-/aplikacija
 
 .DS_Store
 .env.local

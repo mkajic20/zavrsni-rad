@@ -1,4 +1,4 @@
-const express = require("/usr/local/lib/node_modules/express");
+const express = require("express");
 const server = express();
 const port = 5000;
 const korisnici = require("./DAO/korisnikDAO.js");

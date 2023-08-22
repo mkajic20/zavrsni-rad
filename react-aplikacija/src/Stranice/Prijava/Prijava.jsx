@@ -14,42 +14,13 @@ const Prijava = ({prijavi}) => {
 
     const navigacija = useNavigate();
 
-    const validacijaKorime = () => {
-        if (!korime) {
-            setKorimeGreska('Morate unijeti korisničko ime');
-            return false;
-        } else if (korime.length > 15) {
-            setKorimeGreska('Korisničko ime ne smije prelaziti 15 znakova');
-            return false;
-        } else {
-            setKorimeGreska('');
-            return true;
-        }
-    }
-
-    const validacijaLozinka = () => {
-        if(!lozinka) {
-            setLozinkaGreska('Morate unijeti lozinku');
-            return false;
-        } else if (lozinka.length < 8) {
-            setLozinkaGreska('Lozinka mora sadržavati minimalno 8 znakova');
-            return false;
-        } else {
-            setLozinkaGreska('');
-            return true;
-        }
-    }
-
     const prijavaKorisnika = async () => {
-        if(validacijaKorime() && validacijaLozinka()) {
-            if(await prijaviKorisnika(korime, lozinka))
-                prijavi();
-            else {
-                setKorimeGreska(' ');
-                setLozinkaGreska('Korisničko ime ili lozinka nisu ispravni');
-            }
+        if(await prijaviKorisnika(korime, lozinka))
+            prijavi();
+        else {
+            setKorimeGreska(' ');
+            setLozinkaGreska('Korisničko ime ili lozinka nisu ispravni');
         }   
-        
     }
 
 
@@ -62,7 +33,6 @@ const Prijava = ({prijavi}) => {
                 <label htmlFor="korime">Korisničko ime</label>
                 <TekstualnoPolje 
                     naziv="korime"
-                    validacija={validacijaKorime}
                     neispravanUnos={korimeGreska.length !== 0}
                     promjena={(korime) => setKorime(korime)}
                     poruka="1-15 znakova"
@@ -76,7 +46,6 @@ const Prijava = ({prijavi}) => {
                 <label htmlFor="lozinka">Lozinka</label>
                 <TekstualnoPolje 
                     naziv="lozinka"
-                    validacija={validacijaLozinka}
                     neispravanUnos={lozinkaGreska.length !== 0}
                     promjena={(lozinka) => setLozinka(lozinka)}
                     poruka="Minimalno 8 znakova"

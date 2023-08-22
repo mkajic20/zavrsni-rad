@@ -5,12 +5,23 @@ export const prijaviKorisnika = async (korime, lozinka) => {
     //TODO: provjeriti korisnika na serveru
     //TODO: vratiti id i token za korisnika te ih spremiti u localStorage
 
-    if(korime === 'korisnik' && lozinka === 'lozinka'){
-        return true;
-    } else {
-        return false;
-    }
+    const odgovor = await fetch('/api/prijava', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      korime,
+      lozinka,
+    }),
+  });
 
+  if (odgovor.ok) {
+    //TODO: postaviti id i token u localStorage
+    return true;
+  } else {
+    return false
+  }
     
 }
 
@@ -120,21 +131,21 @@ export const dohvatiTjednePodatke = async (tjedan) => {
     return null;
 }
 
-export const promijeniStanjeDnevnogZadatka = async (id, postavljeno, dan) => {
+export const promijeniStanjeTjednogZadatka = async (id, postavljeno, tjedan) => {
     if(postavljeno){
-        //TODO: dodaj podatak u tablici sa stanjem zadataka za taj dan i zadatak
+        //TODO: dodaj podatak u tablici sa stanjem zadataka za taj tjedan i zadatak
     } else {
-        //TODO: izbriši podatak iz tablice sa stanjem zadataka za taj dan i zadatak
+        //TODO: izbriši podatak iz tablice sa stanjem zadataka za taj tjedan i zadatak
     }
 }
 
-export const kreirajDnevniZadatak = async (naslov, opis) => {
-    //TODO: kreirati dnevni zadatak na serveru te returnati novo kreirani zadatak
+export const kreirajTjedniZadatak = async (naslov, opis) => {
+    //TODO: kreirati tjedni zadatak na serveru te returnati novo kreirani zadatak
     const noviZadatak = null;
     return noviZadatak;
 }
 
-export const obrisiDnevniZadatak = async (id) => {
+export const obrisiTjedniZadatak = async (id) => {
     //TODO: obrisati zadatak sa zadanim id-em sa servera
 }
 
@@ -194,21 +205,21 @@ export const dohvatiDnevnePodatke = async (datum) => {
     return null;
 }
 
-export const promijeniStanjeTjednogZadatka = async (id, postavljeno, tjedan) => {
+export const promijeniStanjeDnevnogZadatka = async (id, postavljeno, dan) => {
     if(postavljeno){
-        //TODO: dodaj podatak u tablici sa stanjem zadataka za taj tjedan i zadatak
+        //TODO: dodaj podatak u tablici sa stanjem zadataka za taj dan i zadatak
     } else {
-        //TODO: izbriši podatak iz tablice sa stanjem zadataka za taj tjedan i zadatak
+        //TODO: izbriši podatak iz tablice sa stanjem zadataka za taj dan i zadatak
     }
 }
 
-export const kreirajTjedniZadatak = async (naslov, opis) => {
-    //TODO: kreirati tjedni zadatak na serveru te returnati novo kreirani zadatak
+export const kreirajDnevniZadatak = async (naslov, opis) => {
+    //TODO: kreirati dnevni zadatak na serveru te returnati novo kreirani zadatak
     const noviZadatak = null;
     return noviZadatak;
 }
 
-export const obrisiTjedniZadatak = async (id) => {
+export const obrisiDnevniZadatak = async (id) => {
     //TODO: obrisati zadatak sa zadanim id-em sa servera
 }
 

@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { useNavigate } from 'react-router-dom';
-import { registrirajKorisnika } from '../../PomocneFunkcije/server';
+import { registrirajKorisnika } from '../../PomocneFunkcije/korisnici';
 import TekstualnoPolje from '../../Komponente/TekstualnoPolje/TekstualnoPolje';
 import Gumb from '../../Komponente/Gumb/Gumb';
 import './Registracija.scss'

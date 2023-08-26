@@ -5,7 +5,7 @@ import Stavka from '../../Komponente/Stavka/Stavka'
 import Gumb from '../../Komponente/Gumb/Gumb';
 import ProzorKreiranje from '../../Komponente/ProzorKreiranje/ProzorKreiranje';
 import PotvrdniProzor from '../../Komponente/PotvrdniProzor/PotvrdniProzor';
-import { dohvatiTrajneZadatke, kreirajTrajniZadatak, obrisiTrajniZadatak, promijeniStanjeTrajnogZadatka } from '../../PomocneFunkcije/server';
+import { dohvatiTrajneZadatke, kreirajTrajniZadatak, obrisiTrajniZadatak, promijeniStanjeTrajnogZadatka } from '../../PomocneFunkcije/trajniZadaci';
 
 export const TrajniZadaci = () => {
   const [zavrseniZadaci, setZavrseniZadaci] = useState([]);
@@ -45,16 +45,11 @@ export const TrajniZadaci = () => {
     setNezavrseniZadaci(azuriraniNezavrseniZadaci);
   };
 
-  const kreirajZadatak = async (naslov, opis) => {
-
-    //TODO: umjesto noviZadatak koristiti kreiraniZadatak nakon implmenetacije na serveru
-    //TODO: dohvaceni zadatak nece imati zavrsen: false, to treba dodati u ovoj funkciji
-    //kada se zadatak dodaje u varijablu zadaci onda se ne dodaje false, kada se dodaje u spremljeni zadaci onda se dodaje
-    
-    const kreiraniZadatak = await kreirajTrajniZadatak(naslov, opis);
+  const kreirajZadatak = async (naslov, opis) => {    
+    const noviId = await kreirajTrajniZadatak(naslov, opis);
 
     const noviZadatak = {
-      id: zavrseniZadaci.length + nezavrseniZadaci.length + 1,
+      id: noviId,
       naslov: naslov,
       opis: opis,
       zavrsen: false,

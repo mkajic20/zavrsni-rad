@@ -6,7 +6,7 @@ import {
   dohvatiStanjaZavrsenosti,
   kreirajProjektniZadatak,
   promijeniStanjeProjektnogZadatka,
-} from "../../PomocneFunkcije/server";
+} from "../../PomocneFunkcije/projekti";
 import "./Projekt.scss";
 import Odjeljak from "../../Komponente/Odjeljak/Odjeljak";
 import Gumb from "../../Komponente/Gumb/Gumb";
@@ -31,15 +31,14 @@ const Projekt = ({ brisanjeProjekta }) => {
   };
 
   const dohvatStanjaIzvrsenosti = async () => {
-    const stanja = await dohvatiStanjaZavrsenosti(id);
+    const stanja = await dohvatiStanjaZavrsenosti();
     setStanjaIzvrsenosti(stanja);
   };
 
   const dodajZadatak = async (naslov, opis) => {
-    //TODO: koristiti kreiraniZadatak umjesto noviZadatak
-    const kreiraniZadatak = await kreirajProjektniZadatak(naslov, opis, 1);
+    const noviId = await kreirajProjektniZadatak(id, naslov, opis, stanjaIzvrsenosti[0].id);
     const noviZadatak = {
-      id: zadaci.length + 1,
+      id: noviId,
       naslov: naslov,
       opis: opis,
       stanje: 1,
@@ -55,7 +54,7 @@ const Projekt = ({ brisanjeProjekta }) => {
     await promijeniStanjeProjektnogZadatka(zadatakId, novoStanje);
 
     const noviZadaci = zadaci.map(zadatak =>
-      zadatak.id === zadatakId ? { ...zadatak, stanje: novoStanje } : zadatak
+      zadatak.id === zadatakId ? { ...zadatak, stanje_id: novoStanje } : zadatak
     );
     setZadaci(noviZadaci);
   };
@@ -67,7 +66,7 @@ const Projekt = ({ brisanjeProjekta }) => {
     await promijeniStanjeProjektnogZadatka(zadatakId, novoStanje);
 
     const noviZadaci = zadaci.map(zadatak =>
-      zadatak.id === zadatakId ? { ...zadatak, stanje: novoStanje } : zadatak
+      zadatak.id === zadatakId ? { ...zadatak, stanje_id: novoStanje } : zadatak
     );
     setZadaci(noviZadaci);
   };
@@ -101,19 +100,21 @@ const Projekt = ({ brisanjeProjekta }) => {
       <div className="omotac-zadataka">
         {stanjaIzvrsenosti.map((stanje, idStanja, polje) => (
           <Odjeljak naslov={stanje.naziv} sekundarni key={stanje.id}>
-            {zadaci
-              .filter((zadatak) => zadatak.stanje === stanje.id)
-              .map((zadatak) => (
-                <ProjektniZadatak
-                  key={zadatak.id}
-                  naslov={zadatak.naslov}
-                  opis={zadatak.opis}
-                  prikazanoLijevo={idStanja > 0}
-                  prikazanoDesno={idStanja < polje.length - 1}
-                  klikDesno={() => klikDesno(stanje.id, zadatak.id)}
-                  klikLijevo={() => klikLijevo(stanje.id, zadatak.id)}
-                />
-              ))}
+            {zadaci.length > 0 && (
+              zadaci
+                .filter((zadatak) => zadatak.stanje_id === stanje.id)
+                .map((zadatak) => (
+                  <ProjektniZadatak
+                    key={zadatak.id}
+                    naslov={zadatak.naslov}
+                    opis={zadatak.opis}
+                    prikazanoLijevo={idStanja > 0}
+                    prikazanoDesno={idStanja < polje.length - 1}
+                    klikDesno={() => klikDesno(stanje.id, zadatak.id)}
+                    klikLijevo={() => klikLijevo(stanje.id, zadatak.id)}
+                  />
+                ))
+            )}
           </Odjeljak>
         ))}
       </div>

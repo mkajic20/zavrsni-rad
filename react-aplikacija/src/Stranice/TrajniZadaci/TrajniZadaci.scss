@@ -10,16 +10,18 @@
 }
 
 .zadaci {
-    display: grid;
-    grid-column-gap: 30px;
+    display: flex;
+    flex-direction: column;
     margin: 0 30px;
-
+    gap: 30px;
+    width: 80vw;
 
     @media screen and ($tablet) {
-        grid-template-columns: 1fr 1fr;
+        flex-direction: row;
     }
 
     @media screen and ($racunalo) {
+        width: 60vw;
         margin: 0;
     }
 }

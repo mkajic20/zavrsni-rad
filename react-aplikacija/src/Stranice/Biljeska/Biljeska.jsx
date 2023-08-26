@@ -6,7 +6,7 @@ import {
   azurirajSadrzajBiljeske,
   dohvatiBiljesku,
   dohvatiKategorijeBiljeski,
-} from "../../PomocneFunkcije/server";
+} from "../../PomocneFunkcije/biljeske";
 import Gumb from "../../Komponente/Gumb/Gumb";
 import "./Biljeska.scss";
 import PadajuciIzbornik from "../../Komponente/PadajuciIzbornik/PadajuciIzbornik";
@@ -25,10 +25,12 @@ const Biljeska = ({ promijeniFavorita }) => {
 
   const dohvatPodataka = async () => {
     const podaci = await dohvatiBiljesku(id);
-    setBiljeska(podaci);
-    setTekst(podaci.sadrzaj);
-    setKategorijeBiljeske(podaci.kategorije || []);
-    setFavorit(podaci.kategorije.includes(1));
+    const bilj = JSON.parse(podaci);
+
+    setBiljeska(bilj);
+    setTekst(bilj.sadrzaj);
+    setKategorijeBiljeske(bilj.kategorije || []);
+    setFavorit(bilj.kategorije.includes(1));
   };
 
   const spremiPromjene = async () => {

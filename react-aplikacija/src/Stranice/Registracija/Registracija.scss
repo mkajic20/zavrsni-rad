@@ -2,7 +2,7 @@
 
 .registracija {
     background-color: $siva;
-    height: 40vh;
+    height: 70vh;
     width: 70vw;
     border-radius: 10px;
     position: fixed;
@@ -18,7 +18,6 @@
     font-size: 17px;
 
     @media screen and ($tablet) {
-        height: 40vh;
         width: 50vw;
     }
 

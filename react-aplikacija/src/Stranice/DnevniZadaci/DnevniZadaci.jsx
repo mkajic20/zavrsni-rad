@@ -1,11 +1,17 @@
-import React, { useEffect, useState } from 'react'
-import './DnevniZadaci.scss'
-import Gumb from '../../Komponente/Gumb/Gumb'
-import { formatirajDatum } from '../../PomocneFunkcije/datum';
-import Stavka from '../../Komponente/Stavka/Stavka';
-import { promijeniStanjeDnevnogZadatka, dohvatiDnevnePodatke, dohvatiDnevneZadatke, kreirajDnevniZadatak, obrisiDnevniZadatak } from '../../PomocneFunkcije/server';
-import ProzorKreiranje from '../../Komponente/ProzorKreiranje/ProzorKreiranje';
-import PotvrdniProzor from '../../Komponente/PotvrdniProzor/PotvrdniProzor';
+import React, { useEffect, useState } from "react";
+import "./DnevniZadaci.scss";
+import Gumb from "../../Komponente/Gumb/Gumb";
+import { formatirajDatum } from "../../PomocneFunkcije/datum";
+import Stavka from "../../Komponente/Stavka/Stavka";
+import {
+  promijeniStanjeDnevnogZadatka,
+  dohvatiDnevnePodatke,
+  dohvatiDnevneZadatke,
+  kreirajDnevniZadatak,
+  obrisiDnevniZadatak,
+} from "../../PomocneFunkcije/dnevniZadaci";
+import ProzorKreiranje from "../../Komponente/ProzorKreiranje/ProzorKreiranje";
+import PotvrdniProzor from "../../Komponente/PotvrdniProzor/PotvrdniProzor";
 
 const DnevniZadaci = () => {
   const [dan, setDan] = useState(null);
@@ -23,28 +29,28 @@ const DnevniZadaci = () => {
     setDan(trenutniDatum);
 
     await dohvatiPodatkeZaDan(trenutniDatum);
-  }
+  };
 
   const postaviPrethodniDan = async () => {
     //1 se oduzima mjesecu jer je mjesec u javascriptu indeksiran od 0, sto znaci da su dan i mjesec zamijenjeni
-    const [danDatuma, mjesecDatuma, godinaDatuma] = dan.split('.');
+    const [danDatuma, mjesecDatuma, godinaDatuma] = dan.split(".");
     const prethodniDatum = new Date(godinaDatuma, mjesecDatuma - 1, danDatuma);
     prethodniDatum.setDate(prethodniDatum.getDate() - 1);
     const formatiraniPrethodniDatum = formatirajDatum(prethodniDatum);
     setDan(formatiraniPrethodniDatum);
     await dohvatiPodatkeZaDan(formatiraniPrethodniDatum);
   };
-  
+
   const postaviSljedeciDan = async () => {
     //1 se oduzima mjesecu jer je mjesec u javascriptu indeksiran od 0, sto znaci da su dan i mjesec zamijenjeni
-    const [danDatuma, mjesecDatuma, godinaDatuma] = dan.split('.');
+    const [danDatuma, mjesecDatuma, godinaDatuma] = dan.split(".");
     const sljedeciDatum = new Date(godinaDatuma, mjesecDatuma - 1, danDatuma);
     sljedeciDatum.setDate(sljedeciDatum.getDate() + 1);
     const formatiraniSljedeciDatum = formatirajDatum(sljedeciDatum);
     setDan(formatiraniSljedeciDatum);
     await dohvatiPodatkeZaDan(formatiraniSljedeciDatum);
   };
-  
+
   const dohvatiZadatke = async () => {
     const popisZadataka = await dohvatiDnevneZadatke();
     setZadaci(popisZadataka);
@@ -52,7 +58,9 @@ const DnevniZadaci = () => {
   };
 
   const dohvatiPodatkeZaDan = async (dan) => {
-    const spremljeniZadatak = spremljeniZadaci.find((zadatak) => zadatak.dan === dan);
+    const spremljeniZadatak = spremljeniZadaci.find(
+      (zadatak) => zadatak.dan === dan
+    );
 
     if (!spremljeniZadatak) {
       const podaci = await dohvatiDnevnePodatke(dan);
@@ -60,7 +68,9 @@ const DnevniZadaci = () => {
 
       if (podaci !== null) {
         azuriraniZadaci = zadaci.map((zadatak) => {
-          const podatakZaZadatak = podaci.find((podatak) => podatak.id === zadatak.id);
+          const podatakZaZadatak = podaci.find(
+            (podatak) => podatak.id === zadatak.id
+          );
           if (podatakZaZadatak) {
             return { ...zadatak, zavrsen: podatakZaZadatak.postavljeno };
           } else {
@@ -68,46 +78,45 @@ const DnevniZadaci = () => {
           }
         });
       } else {
-        azuriraniZadaci = zadaci.map((zadatak) => ({ ...zadatak, zavrsen: false }));
+        azuriraniZadaci = zadaci.map((zadatak) => ({
+          ...zadatak,
+          zavrsen: false,
+        }));
       }
 
       const noviPodaci = {
         dan: dan,
-        podaci: azuriraniZadaci
+        podaci: azuriraniZadaci,
       };
       setSpremljeniZadaci((stariZadaci) => [...stariZadaci, noviPodaci]);
     }
-  }
+  };
 
   const promijeniStanjeZadatka = (id, zavrsen) => {
     promijeniStanjeDnevnogZadatka(id, zavrsen, dan);
-  }
+  };
 
   const kreirajZadatak = async (naslov, opis) => {
-
-    //TODO: umjesto noviZadatak koristiti kreiraniZadatak nakon implmenetacije na serveru
-    //TODO: dohvaceni zadatak nece imati zavrsen: false, to treba dodati u ovoj funkciji
-    //kada se zadatak dodaje u varijablu zadaci onda se ne dodaje false, kada se dodaje u spremljeni zadaci onda se dodaje
-    const kreiraniZadatak = await kreirajDnevniZadatak(naslov, opis);
+    const idZadatka = await kreirajDnevniZadatak(naslov, opis);
 
     const noviZadatak = {
-      id: zadaci.length + 2,
+      id: idZadatka,
       naslov: naslov,
       opis: opis,
       zavrsen: false,
     };
-  
+
     const azuriraniSpremljeniZadaci = spremljeniZadaci.map((spremljeni) => {
-        return {
-          ...spremljeni,
-          podaci: [...spremljeni.podaci, noviZadatak],
-        };
+      return {
+        ...spremljeni,
+        podaci: [...spremljeni.podaci, noviZadatak],
+      };
     });
 
     setZadaci((stariZadaci) => [...stariZadaci, noviZadatak]);
     setSpremljeniZadaci(azuriraniSpremljeniZadaci);
     setDodavanje(false);
-  }
+  };
 
   const obrisiZadatak = async () => {
     const id = zadatakZaBrisanje;
@@ -142,24 +151,27 @@ const DnevniZadaci = () => {
     asinkroniDohvat();
   }, [zadaciUcitavanje]);
 
-
   return (
     <>
       <h1>Dnevni zadaci</h1>
-      <div className='gumb-dodaj'>
-        <Gumb tekst="Novi zadatak" poziv={() => setDodavanje(true)}/>
+      <div className="gumb-dodaj">
+        <Gumb tekst="Novi zadatak" poziv={() => setDodavanje(true)} />
       </div>
-      <div className='datum'>
+      <div className="datum">
         <div>
-          <Gumb tekst={'<'} poziv={postaviPrethodniDan}/>
+          <Gumb tekst={"<"} poziv={postaviPrethodniDan} />
         </div>
-        <p className='datum-tekst'>{dan}</p>
+        <p className="datum-tekst">{dan}</p>
         <div>
-          <Gumb tekst={'>'} poziv={postaviSljedeciDan} iskljucen={trenutniDan === dan}/>
+          <Gumb
+            tekst={">"}
+            poziv={postaviSljedeciDan}
+            iskljucen={trenutniDan === dan}
+          />
         </div>
       </div>
 
-      <div className='dnevni-zadaci'> 
+      <div className="dnevni-zadaci">
         {spremljeniZadaci
           .filter((spremljeni) => spremljeni.dan === dan)
           .map((spremljeni) =>
@@ -170,17 +182,18 @@ const DnevniZadaci = () => {
                 opis={zadatak.opis}
                 zavrsen={zadatak.zavrsen}
                 promijeniStanje={() => {
-                  const azuriraniZadaci = spremljeniZadaci.map((spremljeniDan) =>
-                    spremljeniDan.dan === dan
-                      ? {
-                          ...spremljeniDan,
-                          podaci: spremljeniDan.podaci.map((podatak) =>
-                            podatak.id === zadatak.id
-                              ? { ...podatak, zavrsen: !podatak.zavrsen }
-                              : podatak
-                          ),
-                        }
-                      : spremljeniDan
+                  const azuriraniZadaci = spremljeniZadaci.map(
+                    (spremljeniDan) =>
+                      spremljeniDan.dan === dan
+                        ? {
+                            ...spremljeniDan,
+                            podaci: spremljeniDan.podaci.map((podatak) =>
+                              podatak.id === zadatak.id
+                                ? { ...podatak, zavrsen: !podatak.zavrsen }
+                                : podatak
+                            ),
+                          }
+                        : spremljeniDan
                   );
                   setSpremljeniZadaci(azuriraniZadaci);
                   promijeniStanjeZadatka(zadatak.id, !zadatak.zavrsen);
@@ -192,18 +205,29 @@ const DnevniZadaci = () => {
               />
             ))
           )}
-        </div>
+      </div>
 
-      {dodavanje && <ProzorKreiranje naslov="Novi dnevni zadatak" odustani={() => {setDodavanje(false)}} kreiraj={kreirajZadatak}/>}
+      {dodavanje && (
+        <ProzorKreiranje
+          naslov="Novi dnevni zadatak"
+          odustani={() => {
+            setDodavanje(false);
+          }}
+          kreiraj={kreirajZadatak}
+        />
+      )}
 
-      {brisanje && 
-      <PotvrdniProzor 
-        tekst="Želite li obrisati zadatak?" 
-        odustani={() => {setBrisanje(false)}} 
-        potvrdi={obrisiZadatak}/>}
-
+      {brisanje && (
+        <PotvrdniProzor
+          tekst="Želite li obrisati zadatak?"
+          odustani={() => {
+            setBrisanje(false);
+          }}
+          potvrdi={obrisiZadatak}
+        />
+      )}
     </>
-  )
-}
+  );
+};
 
-export default DnevniZadaci
+export default DnevniZadaci;

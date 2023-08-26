@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import Gumb from '../Gumb/Gumb'
 import './Zaglavlje.scss'
-import { odjaviKorisnika } from '../../PomocneFunkcije/server'
+import { odjaviKorisnika } from '../../PomocneFunkcije/korisnici'
 import { useNavigate } from 'react-router-dom'
 
 const Zaglavlje = ({ odjavi }) => {

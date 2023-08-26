@@ -1,11 +1,17 @@
-import React, { useEffect, useState } from 'react'
-import './TjedniZadaci.scss'
-import Gumb from '../../Komponente/Gumb/Gumb'
-import { formatirajDatum } from '../../PomocneFunkcije/datum';
-import Stavka from '../../Komponente/Stavka/Stavka';
-import { dohvatiTjednePodatke, dohvatiTjedneZadatke, kreirajTjedniZadatak, obrisiTjedniZadatak, promijeniStanjeTjednogZadatka } from '../../PomocneFunkcije/server';
-import ProzorKreiranje from '../../Komponente/ProzorKreiranje/ProzorKreiranje';
-import PotvrdniProzor from '../../Komponente/PotvrdniProzor/PotvrdniProzor';
+import React, { useEffect, useState } from "react";
+import "./TjedniZadaci.scss";
+import Gumb from "../../Komponente/Gumb/Gumb";
+import { formatirajDatum } from "../../PomocneFunkcije/datum";
+import Stavka from "../../Komponente/Stavka/Stavka";
+import {
+  dohvatiTjednePodatke,
+  dohvatiTjedneZadatke,
+  kreirajTjedniZadatak,
+  obrisiTjedniZadatak,
+  promijeniStanjeTjednogZadatka,
+} from "../../PomocneFunkcije/tjedniZadaci";
+import ProzorKreiranje from "../../Komponente/ProzorKreiranje/ProzorKreiranje";
+import PotvrdniProzor from "../../Komponente/PotvrdniProzor/PotvrdniProzor";
 
 const TjedniZadaci = () => {
   const [tjedan, setTjedan] = useState(null);
@@ -17,7 +23,6 @@ const TjedniZadaci = () => {
   const [brisanje, setBrisanje] = useState(false);
   const [zadatakZaBrisanje, setZadatakZaBrisanje] = useState(null);
   const [spremljeniZadaci, setSpremljeniZadaci] = useState([]);
-
 
   const dohvatiTjedan = async () => {
     const trenutniDatum = new Date();
@@ -31,24 +36,27 @@ const TjedniZadaci = () => {
     const krajTjedna = new Date(trenutniDatum);
     krajTjedna.setDate(trenutniDatum.getDate() + doNedjelje);
 
-    const trenutniTjedan = `${formatirajDatum(pocetakTjedna)} - ${formatirajDatum(krajTjedna)}`
+    const trenutniTjedan = `${formatirajDatum(
+      pocetakTjedna
+    )} - ${formatirajDatum(krajTjedna)}`;
 
     setTrenutniTjedan(trenutniTjedan);
     setTjedan(trenutniTjedan);
     setPocetakTjedna(pocetakTjedna);
 
     await dohvatiPodatkeZaTjedan(trenutniTjedan);
-  }
+  };
 
   const postaviPrethodniTjedan = async () => {
-
     const pocetakPrethodnogTjedna = new Date(pocetakTjedna);
     pocetakPrethodnogTjedna.setDate(pocetakPrethodnogTjedna.getDate() - 7);
 
     const krajPrethodnogTjedna = new Date(pocetakPrethodnogTjedna);
     krajPrethodnogTjedna.setDate(krajPrethodnogTjedna.getDate() + 6);
 
-    const prethodniTjedan = `${formatirajDatum(pocetakPrethodnogTjedna)} - ${formatirajDatum(krajPrethodnogTjedna)}`
+    const prethodniTjedan = `${formatirajDatum(
+      pocetakPrethodnogTjedna
+    )} - ${formatirajDatum(krajPrethodnogTjedna)}`;
     setTjedan(prethodniTjedan);
     setPocetakTjedna(pocetakPrethodnogTjedna);
     await dohvatiPodatkeZaTjedan(prethodniTjedan);
@@ -61,13 +69,13 @@ const TjedniZadaci = () => {
     const krajSljedecegTjedna = new Date(pocetakSljedecegTjedna);
     krajSljedecegTjedna.setDate(krajSljedecegTjedna.getDate() + 6);
 
-    const sljedeciTjedan = `${formatirajDatum(pocetakSljedecegTjedna)} - ${formatirajDatum(krajSljedecegTjedna)}`
+    const sljedeciTjedan = `${formatirajDatum(
+      pocetakSljedecegTjedna
+    )} - ${formatirajDatum(krajSljedecegTjedna)}`;
     setTjedan(sljedeciTjedan);
     setPocetakTjedna(pocetakSljedecegTjedna);
     await dohvatiPodatkeZaTjedan(sljedeciTjedan);
   };
-
-
 
   const dohvatiZadatke = async () => {
     const popisZadataka = await dohvatiTjedneZadatke();
@@ -76,7 +84,9 @@ const TjedniZadaci = () => {
   };
 
   const dohvatiPodatkeZaTjedan = async (tjedan) => {
-    const spremljeniZadatak = spremljeniZadaci.find((zadatak) => zadatak.tjedan === tjedan);
+    const spremljeniZadatak = spremljeniZadaci.find(
+      (zadatak) => zadatak.tjedan === tjedan
+    );
 
     if (!spremljeniZadatak) {
       const podaci = await dohvatiTjednePodatke(tjedan);
@@ -84,7 +94,9 @@ const TjedniZadaci = () => {
 
       if (podaci !== null) {
         azuriraniZadaci = zadaci.map((zadatak) => {
-          const podatakZaZadatak = podaci.find((podatak) => podatak.id === zadatak.id);
+          const podatakZaZadatak = podaci.find(
+            (podatak) => podatak.id === zadatak.id
+          );
           if (podatakZaZadatak) {
             return { ...zadatak, zavrsen: podatakZaZadatak.postavljeno };
           } else {
@@ -92,23 +104,25 @@ const TjedniZadaci = () => {
           }
         });
       } else {
-        azuriraniZadaci = zadaci.map((zadatak) => ({ ...zadatak, zavrsen: false }));
+        azuriraniZadaci = zadaci.map((zadatak) => ({
+          ...zadatak,
+          zavrsen: false,
+        }));
       }
 
       const noviPodaci = {
         tjedan: tjedan,
-        podaci: azuriraniZadaci
+        podaci: azuriraniZadaci,
       };
       setSpremljeniZadaci((stariZadaci) => [...stariZadaci, noviPodaci]);
     }
-  }
+  };
 
   const promijeniStanjeZadatka = async (id, zavrsen) => {
     await promijeniStanjeTjednogZadatka(id, zavrsen, tjedan);
-  }
+  };
 
   const kreirajZadatak = async (naslov, opis) => {
-
     //TODO: umjesto noviZadatak koristiti kreiraniZadatak nakon implmenetacije na serveru
     //TODO: dohvaceni zadatak nece imati zavrsen: false, to treba dodati u ovoj funkciji
     //kada se zadatak dodaje u varijablu zadaci onda se ne dodaje false, kada se dodaje u spremljeni zadaci onda se dodaje
@@ -120,7 +134,7 @@ const TjedniZadaci = () => {
       opis: opis,
       zavrsen: false,
     };
-  
+
     const azuriraniSpremljeniZadaci = spremljeniZadaci.map((spremljeni) => {
       return {
         ...spremljeni,
@@ -131,7 +145,7 @@ const TjedniZadaci = () => {
     setZadaci((stariZadaci) => [...stariZadaci, noviZadatak]);
     setSpremljeniZadaci(azuriraniSpremljeniZadaci);
     setDodavanje(false);
-  }
+  };
 
   const obrisiZadatak = () => {
     const id = zadatakZaBrisanje;
@@ -166,24 +180,27 @@ const TjedniZadaci = () => {
     asinkroniDohvat();
   }, [zadaciUcitavanje]);
 
-
   return (
     <>
       <h1>Tjedni zadaci</h1>
-      <div className='gumb-dodaj'>
-        <Gumb tekst="Dodaj novi" poziv={() => setDodavanje(true)}/>
+      <div className="gumb-dodaj">
+        <Gumb tekst="Dodaj novi" poziv={() => setDodavanje(true)} />
       </div>
-      <div className='tjedan'>
+      <div className="tjedan">
         <div>
-          <Gumb tekst={'<'} poziv={postaviPrethodniTjedan}/>
+          <Gumb tekst={"<"} poziv={postaviPrethodniTjedan} />
         </div>
-        <p className='tjedan-tekst'>{tjedan}</p>
+        <p className="tjedan-tekst">{tjedan}</p>
         <div>
-          <Gumb tekst={'>'} poziv={postaviSljedeciTjedan} iskljucen={trenutniTjedan === tjedan}/>
+          <Gumb
+            tekst={">"}
+            poziv={postaviSljedeciTjedan}
+            iskljucen={trenutniTjedan === tjedan}
+          />
         </div>
       </div>
 
-      <div className='tjedni-zadaci'>
+      <div className="tjedni-zadaci">
         {spremljeniZadaci
           .filter((spremljeni) => spremljeni.tjedan === tjedan)
           .map((spremljeni) =>
@@ -194,17 +211,18 @@ const TjedniZadaci = () => {
                 opis={zadatak.opis}
                 zavrsen={zadatak.zavrsen}
                 promijeniStanje={() => {
-                  const azuriraniZadaci = spremljeniZadaci.map((spremljeniTjedan) =>
-                    spremljeniTjedan.tjedan === tjedan
-                      ? {
-                          ...spremljeniTjedan,
-                          podaci: spremljeniTjedan.podaci.map((podatak) =>
-                            podatak.id === zadatak.id
-                              ? { ...podatak, zavrsen: !podatak.zavrsen }
-                              : podatak
-                          ),
-                        }
-                      : spremljeniTjedan
+                  const azuriraniZadaci = spremljeniZadaci.map(
+                    (spremljeniTjedan) =>
+                      spremljeniTjedan.tjedan === tjedan
+                        ? {
+                            ...spremljeniTjedan,
+                            podaci: spremljeniTjedan.podaci.map((podatak) =>
+                              podatak.id === zadatak.id
+                                ? { ...podatak, zavrsen: !podatak.zavrsen }
+                                : podatak
+                            ),
+                          }
+                        : spremljeniTjedan
                   );
                   setSpremljeniZadaci(azuriraniZadaci);
                   promijeniStanjeZadatka(zadatak.id, !zadatak.zavrsen);
@@ -216,18 +234,28 @@ const TjedniZadaci = () => {
               />
             ))
           )}
-        </div>
+      </div>
 
-      {dodavanje && <ProzorKreiranje odustani={() => {setDodavanje(false)}} kreiraj={kreirajZadatak}/>}
+      {dodavanje && (
+        <ProzorKreiranje
+          odustani={() => {
+            setDodavanje(false);
+          }}
+          kreiraj={kreirajZadatak}
+        />
+      )}
 
-      {brisanje && 
-      <PotvrdniProzor 
-        tekst="Želite li obrisati zadatak?" 
-        odustani={() => {setBrisanje(false)}} 
-        potvrdi={obrisiZadatak}/>}
-
+      {brisanje && (
+        <PotvrdniProzor
+          tekst="Želite li obrisati zadatak?"
+          odustani={() => {
+            setBrisanje(false);
+          }}
+          potvrdi={obrisiZadatak}
+        />
+      )}
     </>
-  )
-}
+  );
+};
 
-export default TjedniZadaci
+export default TjedniZadaci;

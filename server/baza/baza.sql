@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS tjedni_zadaci (
 
 CREATE TABLE IF NOT EXISTS tjedni_podaci (
   id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-  tjedan VARCHAR(30) NOT NULL UNIQUE,
+  tjedan VARCHAR(30) NOT NULL,
   postavljeno BOOLEAN NOT NULL,
   zadatak_id VARCHAR(100),
   korisnik_id INTEGER NOT NULL,
@@ -40,7 +40,7 @@ CREATE TABLE IF NOT EXISTS dnevni_zadaci (
 
 CREATE TABLE IF NOT EXISTS dnevni_podaci (
   id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-  tjedan VARCHAR(30) NOT NULL UNIQUE,
+  datum VARCHAR(30) NOT NULL,
   postavljeno BOOLEAN NOT NULL,
   zadatak_id VARCHAR(100),
   korisnik_id INTEGER NOT NULL,
@@ -50,7 +50,7 @@ CREATE TABLE IF NOT EXISTS dnevni_podaci (
 
 CREATE TABLE IF NOT EXISTS projekti (
   id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-  naziv VARCHAR(30) NOT NULL UNIQUE,
+  naziv VARCHAR(30) NOT NULL,
   korisnik_id INTEGER NOT NULL,
   FOREIGN KEY (korisnik_id) REFERENCES korisnik(id));
 
@@ -60,7 +60,7 @@ CREATE TABLE IF NOT EXISTS stanja_zavrsenosti (
 
 CREATE TABLE IF NOT EXISTS projektni_zadaci (
    id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-  naslov VARCHAR(30) NOT NULL UNIQUE,
+  naslov VARCHAR(30) NOT NULL,
   opis VARCHAR(100),
   projekt_id INTEGER NOT NULL,
   stanje_id INTEGER NOT NULL,
@@ -69,14 +69,14 @@ CREATE TABLE IF NOT EXISTS projektni_zadaci (
 
 CREATE TABLE IF NOT EXISTS kategorije (
   id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-  naziv VARCHAR(30) NOT NULL UNIQUE,
+  naziv VARCHAR(30) NOT NULL,
   korisnik_id INTEGER NOT NULL,
   FOREIGN KEY (korisnik_id) REFERENCES korisnik(id));
 
 CREATE TABLE IF NOT EXISTS biljeske (
   id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-  naslov VARCHAR(30) NOT NULL UNIQUE,
-  sadrzaj VARCHAR(1000) NOT NULL UNIQUE,
+  naslov VARCHAR(30) NOT NULL,
+  sadrzaj VARCHAR(1000) NOT NULL,
   korisnik_id INTEGER NOT NULL,
   FOREIGN KEY (korisnik_id) REFERENCES korisnik(id));
 
@@ -84,8 +84,10 @@ CREATE TABLE IF NOT EXISTS kategorije_biljeski (
   id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
   biljeska_id INTEGER NOT NULL,
   kategorija_id INTEGER NOT NULL,
+  korisnik_id INTEGER NOT NULL,
   FOREIGN KEY (biljeska_id) REFERENCES biljeske(id)
-  FOREIGN KEY (kategorija_id) REFERENCES kategorije(id));
+  FOREIGN KEY (kategorija_id) REFERENCES kategorije(id)
+  FOREIGN KEY (korisnik_id) REFERENCES korisnik(id));
 
 INSERT INTO korisnici (id, korime, lozinka) VALUES
 (0, 'test', 'test123456'),

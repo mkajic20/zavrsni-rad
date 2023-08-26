@@ -26,7 +26,8 @@
     align-items: center;
 
     @media screen and ($racunalo) {
+        align-items: start;
         margin: 0;
-        width: auto;
+        width: 30vw;
     }
 }

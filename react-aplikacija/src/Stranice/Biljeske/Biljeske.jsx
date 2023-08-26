@@ -8,7 +8,8 @@ import {
   kreirajKategorijuBiljeski,
   promijeniFavorita,
   dohvatiKategorijeBiljeski,
-} from "../../PomocneFunkcije/server";
+  kreirajBiljesku,
+} from "../../PomocneFunkcije/biljeske";
 import Biljeska from "../../Komponente/Biljeska/Biljeska";
 import ProzorKreiranje from "../../Komponente/ProzorKreiranje/ProzorKreiranje";
 import { useNavigate } from "react-router-dom";
@@ -45,7 +46,7 @@ const Biljeske = ({ favoritKlik }) => {
             ? {
                 ...biljeska,
                 favorit: novoStanje,
-                kategorije: [...biljeska.kategorije, { idKategorije: 1 }],
+                kategorije: [...biljeska.kategorije, { kategorija_id: 1 }],
               }
             : biljeska
         )
@@ -58,7 +59,7 @@ const Biljeske = ({ favoritKlik }) => {
                 ...biljeska,
                 favorit: novoStanje,
                 kategorije: biljeska.kategorije.filter(
-                  (kat) => kat.idKategorije !== 1
+                  (kat) => kat.kategorija_id !== 1
                 ),
               }
             : biljeska
@@ -69,10 +70,9 @@ const Biljeske = ({ favoritKlik }) => {
   };
 
   const novaKategorija = async (naziv) => {
-    //TODO: umjesto novaKategorija koristiti kreiranaKategorija
-    const kreiranaKategorija = await kreirajKategorijuBiljeski(naziv);
+    const noviId = await kreirajKategorijuBiljeski(naziv);
     const novaKategorija = {
-      id: popisKategorija.length + 1,
+      id: noviId,
       naziv: naziv,  
     };
     setPopisKategorija([...popisKategorija, novaKategorija]);
@@ -80,20 +80,18 @@ const Biljeske = ({ favoritKlik }) => {
   };
 
   const novaBiljeska = async (naziv) => {
-    //TODO: umjesto novaBiljeska koristiti kreiranaBiljeska
-    const kreiranaBiljeska = await kreirajKategorijuBiljeski(naziv);
+    const noviId = await kreirajBiljesku(naziv);
     const novaBiljeska = {
-      id: popisBiljeski.length + 1,
+      id: noviId,
       naslov: naziv,
       favorit: false,
       kategorije: [
-        {id: 777, idBiljeske: popisKategorija.length + 1, idKategorije: 9999}
+        {id: 777, biljeska_id: popisKategorija.length + 1, kategorija_id: 2}
       ]
     };
 
     setPopisBiljeski([...popisBiljeski, novaBiljeska]);
     setDodavanjeBiljeske(false);
-    console.log(popisBiljeski)
   }
 
   useEffect(() => {
@@ -130,7 +128,7 @@ const Biljeske = ({ favoritKlik }) => {
               {popisBiljeski
                 .filter((biljeska) =>
                   biljeska.kategorije.some(
-                    (kat) => kat.idKategorije === kategorija.id
+                    (kat) => kat.kategorija_id === kategorija.id
                   )
                 )
                 .map((biljeska) => (

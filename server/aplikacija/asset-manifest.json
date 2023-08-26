@@ -1,17 +1,17 @@
 {
   "files": {
-    "main.css": "/static/css/main.4fda52b3.css",
-    "main.js": "/static/js/main.0be33b48.js",
+    "main.css": "/static/css/main.ac614687.css",
+    "main.js": "/static/js/main.e9cab6ca.js",
     "static/media/nije-favorit.png": "/static/media/nije-favorit.388d6fcc5aff05efb824.png",
     "static/media/ikona-brisanje.png": "/static/media/ikona-brisanje.c7256a458528fbe3ebf9.png",
     "static/media/favorit.png": "/static/media/favorit.591657dc726e448bf1ed.png",
     "static/media/strelica.png": "/static/media/strelica.1dbf4f0c0da4a7b0fcac.png",
     "index.html": "/index.html",
-    "main.4fda52b3.css.map": "/static/css/main.4fda52b3.css.map",
-    "main.0be33b48.js.map": "/static/js/main.0be33b48.js.map"
+    "main.ac614687.css.map": "/static/css/main.ac614687.css.map",
+    "main.e9cab6ca.js.map": "/static/js/main.e9cab6ca.js.map"
   },
   "entrypoints": [
-    "static/css/main.4fda52b3.css",
-    "static/js/main.0be33b48.js"
+    "static/css/main.ac614687.css",
+    "static/js/main.e9cab6ca.js"
   ]
 }

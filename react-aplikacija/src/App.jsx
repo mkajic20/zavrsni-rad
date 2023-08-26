@@ -8,11 +8,17 @@ import TjedniZadaci from "./Stranice/TjedniZadaci/TjedniZadaci";
 import { TrajniZadaci } from "./Stranice/TrajniZadaci/TrajniZadaci";
 import { Route, Routes } from "react-router-dom";
 import {
+  provjeriKorisnika,
+} from "./PomocneFunkcije/korisnici";
+import {
   brisanjeProjekta,
-  dohvatiBiljeskeFavorite,
-  dohvatiPopisProjekata,
   kreirajProjekt,
-} from "./PomocneFunkcije/server";
+  dohvatiPopisProjekata
+} from "./PomocneFunkcije/projekti";
+import {
+  dohvatiBiljeskeFavorite,
+  promijeniFavorita
+} from "./PomocneFunkcije/biljeske";
 import Biljeske from "./Stranice/Biljeske/Biljeske";
 import Projekt from "./Stranice/Projekt/Projekt";
 import Biljeska from "./Stranice/Biljeska/Biljeska";
@@ -22,7 +28,7 @@ import ZasticenaPutanja from "./Komponente/ZasticenaPutanja/ZasticenaPutanja";
 
 function App() {
 
-  const [prijavljen, setPrijavljen] = useState(false);
+  const [prijavljen, setPrijavljen] = useState(provjeriKorisnika() ? true : false,);
   const [projekti, setProjekti] = useState([]);
   const [favoriti, setFavoriti] = useState([]);
 
@@ -32,21 +38,18 @@ function App() {
   };
 
   const dodajProjekt = async (naziv) => {
-    //TODO: umjesto noviProjekt koristiti kreiraniProjekt
-    const kreiraniProjekt = await kreirajProjekt(naziv);
+    const noviId = await kreirajProjekt(naziv);
     const noviProjekt = {
-      id: projekti.length + 1,
+      id: noviId,
       naziv: naziv,
     };
     setProjekti([...projekti, noviProjekt]);
-    console.log(projekti);
   };
 
   const obrisiProjekt = async (id) => {
     id = Number(id);
     brisanjeProjekta(id);
     const noviProjekti = projekti.filter((projekt) => projekt.id !== id);
-    console.log(id);
     setProjekti(noviProjekti);
   };
 
@@ -56,6 +59,7 @@ function App() {
   };
 
   const promijeniFavorit = (biljeska, novoStanje) => {
+    promijeniFavorita(biljeska.id, novoStanje);
     if (novoStanje) {
       setFavoriti((prevPopisFavorita) => [...prevPopisFavorita, biljeska]);
     } else {

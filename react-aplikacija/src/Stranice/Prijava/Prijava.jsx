@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import './Prijava.scss'
 import TekstualnoPolje from '../../Komponente/TekstualnoPolje/TekstualnoPolje';
 import Gumb from '../../Komponente/Gumb/Gumb';
-import { prijaviKorisnika } from '../../PomocneFunkcije/server';
+import { prijaviKorisnika } from '../../PomocneFunkcije/korisnici';
 import { useNavigate } from 'react-router-dom';
 
 const Prijava = ({prijavi}) => {

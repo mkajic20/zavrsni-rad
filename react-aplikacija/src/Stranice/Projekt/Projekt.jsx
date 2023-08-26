@@ -41,7 +41,7 @@ const Projekt = ({ brisanjeProjekta }) => {
       id: noviId,
       naslov: naslov,
       opis: opis,
-      stanje: 1,
+      stanje_id: stanjaIzvrsenosti[0].id,
     };
     setZadaci([...zadaci, noviZadatak]);
     setDodavanje(false);

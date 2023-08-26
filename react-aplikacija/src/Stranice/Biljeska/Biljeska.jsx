@@ -79,7 +79,7 @@ const Biljeska = ({ promijeniFavorita }) => {
           <PadajuciIzbornik naslov="Kategorije">
             {popisKategorija.map(
               (kategorija) =>
-                kategorija.id !== 9999 &&
+                kategorija.id !== 2 &&
                 kategorija.id !== 1 && (
                   <Stavka
                     key={kategorija.id}

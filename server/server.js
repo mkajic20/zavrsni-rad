@@ -67,6 +67,8 @@ function postaviPutanje() {
   server.get('/api/biljeske/:id', biljeske.dohvatiBiljeske);
   server.post('/api/biljeske/:id', biljeske.kreirajBiljesku);
   server.put('/api/biljeske/:id', biljeske.azurirajBiljesku);
+  server.delete('/api/biljeske/:id', biljeske.obrisiBiljesku);
+
 
   server.get('/api/biljeska/:id', biljeske.dohvatiBiljesku);
 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import './Biljeska.scss';
 import ikonaBrisanje from '../../Resursi/ikona-brisanje.png';
@@ -7,6 +7,10 @@ import ikonaNijeFavorit from '../../Resursi/nije-favorit.png'
 
 const Biljeska = ({ naslov, brisanje, klikPoziv, biljeskaFavorit, favoritKlik}) => {
     const [favorit, setFavorit] = useState(biljeskaFavorit);
+
+    useEffect(() => {
+      setFavorit(biljeskaFavorit);
+    }, [biljeskaFavorit]);
 
   return (
     <div className='biljeska'>

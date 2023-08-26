@@ -9,10 +9,12 @@ import {
   promijeniFavorita,
   dohvatiKategorijeBiljeski,
   kreirajBiljesku,
+  obrisiBiljesku
 } from "../../PomocneFunkcije/biljeske";
 import Biljeska from "../../Komponente/Biljeska/Biljeska";
 import ProzorKreiranje from "../../Komponente/ProzorKreiranje/ProzorKreiranje";
 import { useNavigate } from "react-router-dom";
+import PotvrdniProzor from "../../Komponente/PotvrdniProzor/PotvrdniProzor";
 
 const Biljeske = ({ favoritKlik }) => {
 
@@ -20,6 +22,8 @@ const Biljeske = ({ favoritKlik }) => {
   const [dodavanjeKategorije, setDodavanjeKategorije] = useState(false);
   const [dodavanjeBiljeske, setDodavanjeBiljeske] = useState(false);
   const [popisKategorija, setPopisKategorija] = useState([]);
+  const [brisanje, setBrisanje] = useState(false);
+  const [biljeskaZaBrisanje, setBiljeskaZaBrisanje] = useState(null);
 
   const navigacija = useNavigate();
 
@@ -94,6 +98,13 @@ const Biljeske = ({ favoritKlik }) => {
     setDodavanjeBiljeske(false);
   }
 
+  const brisanjeBiljeske = async () => {
+    const id = biljeskaZaBrisanje;
+    await obrisiBiljesku(id);
+    setPopisBiljeski(popisBiljeski.filter((biljeska) => biljeska.id !== id));
+    setBrisanje(false);
+  }
+
   useEffect(() => {
     const asinkroniDohvat = async () => {
       await dohvatiSveKategorije();
@@ -122,7 +133,6 @@ const Biljeske = ({ favoritKlik }) => {
       </div>
       <div className="biljeske-kategorije">
         {popisKategorija
-          .sort((a, b) => a.id - b.id)
           .map((kategorija) => (
             <PadajuciOdjeljak key={kategorija.id} naslov={kategorija.naziv}>
               {popisBiljeski
@@ -141,6 +151,10 @@ const Biljeske = ({ favoritKlik }) => {
                     }}
                     klikPoziv={() => {
                       navigacija(`${biljeska.id}`);
+                    }}
+                    brisanje={() => {
+                      setBrisanje(true);
+                      setBiljeskaZaBrisanje(biljeska.id);
                     }}
                   />
                 ))}
@@ -164,6 +178,13 @@ const Biljeske = ({ favoritKlik }) => {
           kreiraj={novaBiljeska}
           sekundarni
         />
+      )}
+
+      {brisanje && (
+        <PotvrdniProzor 
+        tekst="Želite li obrisati bilješku?"
+        potvrdi={() => {brisanjeBiljeske()}}
+        odustani={() => {setBrisanje(false)}}/>
       )}
     </>
   );

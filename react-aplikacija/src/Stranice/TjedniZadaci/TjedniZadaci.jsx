@@ -123,13 +123,10 @@ const TjedniZadaci = () => {
   };
 
   const kreirajZadatak = async (naslov, opis) => {
-    //TODO: umjesto noviZadatak koristiti kreiraniZadatak nakon implmenetacije na serveru
-    //TODO: dohvaceni zadatak nece imati zavrsen: false, to treba dodati u ovoj funkciji
-    //kada se zadatak dodaje u varijablu zadaci onda se ne dodaje false, kada se dodaje u spremljeni zadaci onda se dodaje
-    const kreiraniZadatak = await kreirajTjedniZadatak(naslov, opis);
+    const noviId = await kreirajTjedniZadatak(naslov, opis);
 
     const noviZadatak = {
-      id: zadaci.length + 2,
+      id: noviId,
       naslov: naslov,
       opis: opis,
       zavrsen: false,

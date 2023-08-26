@@ -34,6 +34,22 @@ export const dohvatiBiljeske = async () => {
   return null;
 };
 
+export const obrisiBiljesku = async (idBiljeske) => {
+  const jwt = localStorage.getItem("jwt");
+  const id = localStorage.getItem("korisnik");
+
+  await fetch(`/api/biljeske/${id}`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: jwt,
+    },
+    body: JSON.stringify({
+      id: idBiljeske,
+    }),
+  });
+}
+
 export const kreirajBiljesku = async (naziv) => {
   const jwt = localStorage.getItem("jwt");
   const id = localStorage.getItem("korisnik");
@@ -169,8 +185,9 @@ export const azurirajKategorijuBiljeske = async (
 ) => {
   const jwt = localStorage.getItem("jwt");
   const id = localStorage.getItem("korisnik");
-  if (kategorijaPostoji) {
+  if (!kategorijaPostoji) {
     await fetch(`/api/biljeske/kategorije-biljeski/${id}`, {
+     
       method: "POST",
       headers: {
         "Content-Type": "application/json",

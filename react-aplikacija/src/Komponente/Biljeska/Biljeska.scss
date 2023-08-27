@@ -9,15 +9,29 @@
   border-radius: 6px;
   padding: 5px;
   height: 30px;
-
-  &:hover{
-    background-color: $siva;
-    cursor: pointer;
-    .ikona {
-      visibility: visible;
-    }
-
+  background-color: $siva;
+  margin-right: 50px;
+  .ikona {
+    visibility: visible;
   }
+
+
+  @media screen and ($racunalo) {
+    background-color: transparent;
+    .ikona {
+      visibility: hidden;
+    }
+      &:hover{
+      background-color: $siva;
+      cursor: pointer;
+      .ikona {
+        visibility: visible;
+      }
+
+    }
+  }
+
+  
 
     &-naslov {
         flex: 1; //da zauzme ostatak dostupnog prostora, u suprotnom se potvrdni okvir smanji u širini

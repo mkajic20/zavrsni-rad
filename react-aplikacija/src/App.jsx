@@ -86,7 +86,7 @@ function App() {
       {prijavljen && (
         <>
           <Zaglavlje className="zaglavlje" odjavi={() => setPrijavljen(false)}/>
-          <div className="navigacija-sakrij">
+          <div className="navigacija-racunalo">
             <Navigacija
               popisProjekata={projekti}
               popisFavorita={favoriti}
@@ -104,13 +104,12 @@ function App() {
             path="/"
             element={
             <ZasticenaPutanja ispravan={prijavljen} putanja={"/prijava"} > 
-            {window.innerWidth < 1024 && 
+            <div className="navigacija-mobitel">
               <Navigacija
                 popisProjekata={projekti}
                 popisFavorita={favoriti}
               />
-            }
-            
+            </div>            
             </ZasticenaPutanja>}
           />
           <Route

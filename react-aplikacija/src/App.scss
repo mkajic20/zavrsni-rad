@@ -16,7 +16,14 @@ html, body, #root {
     }
 }
 
-.navigacija-sakrij {
+.navigacija-mobitel {
+  display: block;
+  @media screen and ($racunalo) {
+    display: none;
+  }
+}
+
+.navigacija-racunalo {
   display: none;
   @media screen and ($racunalo) {
     margin-top: 61px;

@@ -10,7 +10,7 @@ const Zaglavlje = ({ odjavi }) => {
   return (
     <>
     <div className="zaglavlje"> 
-      <p className="logotip" onClick={() => {navigacija('/')}}>TaskHub</p>
+      <p className="logotip" onClick={() => {navigacija('/')}}>Planer</p>
       <div className="omotac-gumba"> 
         <div className="gumb-zaglavlja">
           <Gumb tekst="Odjava" poziv={() => {odjavi(); odjaviKorisnika()}} />

@@ -7,12 +7,14 @@ import {
   kreirajProjektniZadatak,
   promijeniStanjeProjektnogZadatka,
 } from "../../PomocneFunkcije/projekti";
+import {  formatirajDatum } from "../../PomocneFunkcije/datum";
 import "./Projekt.scss";
 import Odjeljak from "../../Komponente/Odjeljak/Odjeljak";
 import Gumb from "../../Komponente/Gumb/Gumb";
 import ProzorKreiranje from "../../Komponente/ProzorKreiranje/ProzorKreiranje";
 import PotvrdniProzor from "../../Komponente/PotvrdniProzor/PotvrdniProzor";
 import ProjektniZadatak from "../../Komponente/ProjektniZadatak/ProjektniZadatak";
+import ZadatakDetalji from "../../Komponente/ZadatakDetalji/ZadatakDetalji";
 
 const Projekt = ({ brisanjeProjekta }) => {
   const [nazivProjekta, setNazivProjekta] = useState("");
@@ -20,6 +22,9 @@ const Projekt = ({ brisanjeProjekta }) => {
   const [zadaci, setZadaci] = useState([]);
   const [dodavanje, setDodavanje] = useState(false);
   const [brisanje, setBrisanje] = useState(false);
+
+  const [zadatakDetalji, setZadatakDetalji] = useState(null);
+  const [zadatakDetaljiPrikaz, setZadatakDetaljiPrikaz] = useState(false);
 
   const id = useParams().id;
   const navigacija = useNavigate();
@@ -35,13 +40,17 @@ const Projekt = ({ brisanjeProjekta }) => {
     setStanjaIzvrsenosti(stanja);
   };
 
-  const dodajZadatak = async (naslov, opis) => {
-    const noviId = await kreirajProjektniZadatak(id, naslov, opis, stanjaIzvrsenosti[0].id);
+  const dodajZadatak = async (naslov, opis, datum) => {
+    const datum_zavrsetka = formatirajDatum(new Date(datum));
+    const datum_kreiranja = formatirajDatum(new Date());
+    const noviId = await kreirajProjektniZadatak(id, naslov, opis, stanjaIzvrsenosti[0].id, datum_zavrsetka, datum_kreiranja);
     const noviZadatak = {
       id: noviId,
       naslov: naslov,
       opis: opis,
       stanje_id: stanjaIzvrsenosti[0].id,
+      datum_zavrsetka: datum_zavrsetka,
+      datum_kreiranja: datum_kreiranja,
     };
     setZadaci([...zadaci, noviZadatak]);
     setDodavanje(false);
@@ -70,6 +79,13 @@ const Projekt = ({ brisanjeProjekta }) => {
     );
     setZadaci(noviZadaci);
   };
+
+  const azurirajDatumZadatka = (id, datum_zavrsetka) => {
+    const noviZadaci = zadaci.map((zadatak) =>
+      zadatak.id === id ? { ...zadatak, datum_zavrsetka: datum_zavrsetka } : zadatak
+    );
+    setZadaci(noviZadaci);
+  }
 
   useEffect(() => {
     const asinkroniDohvat = async () => {
@@ -112,6 +128,11 @@ const Projekt = ({ brisanjeProjekta }) => {
                     prikazanoDesno={idStanja < polje.length - 1}
                     klikDesno={() => klikDesno(stanje.id, zadatak.id)}
                     klikLijevo={() => klikLijevo(stanje.id, zadatak.id)}
+                    datum={zadatak.datum_zavrsetka}
+                    klikPoziv={() => {
+                      setZadatakDetalji(zadatak);
+                      setZadatakDetaljiPrikaz(true);
+                    }}
                   />
                 ))
             )}
@@ -123,7 +144,8 @@ const Projekt = ({ brisanjeProjekta }) => {
         <ProzorKreiranje
           naslov="Novi zadatak"
           odustani={() => setDodavanje(false)}
-          kreiraj={dodajZadatak}
+          kreiraj={dodajZadatak} 
+          unosDatuma
         />
       )}
 
@@ -137,6 +159,20 @@ const Projekt = ({ brisanjeProjekta }) => {
           odustani={() => setBrisanje(false)}
         />
       )}
+
+      {zadatakDetaljiPrikaz && (
+        <ZadatakDetalji 
+          idZadatka={zadatakDetalji.id}
+          naslov={zadatakDetalji.naslov}
+          zatvori={() => setZadatakDetaljiPrikaz(false)}
+          datumKreiranja={zadatakDetalji.datum_kreiranja}
+          datumZavrsetka={zadatakDetalji.datum_zavrsetka}
+          stanje={stanjaIzvrsenosti.find(stanje => stanje.id === zadatakDetalji.stanje_id).naziv}
+          datumPromjene={zadatakDetalji.datum_promjene}
+          azuriranjeDatuma={azurirajDatumZadatka}
+        />
+      )}
+
     </>
   );
 };

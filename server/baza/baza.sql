@@ -64,6 +64,9 @@ CREATE TABLE IF NOT EXISTS projektni_zadaci (
   opis VARCHAR(100),
   projekt_id INTEGER NOT NULL,
   stanje_id INTEGER NOT NULL,
+  datum_zavrsetka VARCHAR(30) NOT NULL,
+  datum_kreiranja VARCHAR(30) NOT NULL,
+  datum_promjene VARCHAR(30),
   FOREIGN KEY (projekt_id) REFERENCES projekt(id)
   FOREIGN KEY (stanje_id) REFERENCES stanja_zavrsenosti(id));
 

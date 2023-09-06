@@ -40,6 +40,7 @@ function postaviPutanje() {
   server.get('/api/zadaci/dnevni-podaci/:id', zadaci.dohvatiDnevnePodatke);
   server.post('/api/zadaci/dnevni-podaci/:id', zadaci.kreirajDnevniPodatak);
   server.delete('/api/zadaci/dnevni-podaci/:id', zadaci.izbrisiDnevniPodatak);
+  server.get('/api/zadaci/dnevni-podaci/korisnik/:id', zadaci.dohvatiDnevnePodatkeKorisnika);
 
   server.get('/api/zadaci/tjedni-zadaci/:id', zadaci.dohvatiTjedneZadatke);
   server.post('/api/zadaci/tjedni-zadaci/:id', zadaci.kreirajTjedniZadatak);
@@ -59,6 +60,9 @@ function postaviPutanje() {
 
   server.post('/api/projekt/projektni-zadaci/:id', projekti.kreirajProjektniZadatak);
   server.put('/api/projekt/projektni-zadaci/:id', projekti.azurirajProjektniZadatak);
+  server.put('/api/projekt/projektni-zadaci/datum/:id', projekti.azurirajDatumProjektnogZadatka);
+
+  server.get('/api/projekt/projektni-zadaci/:id', projekti.dohvatiProjektneZadatkeKorisnika);
 
 
   server.get('/api/biljeske/kategorije/:id', biljeske.dohvatiKategorije);

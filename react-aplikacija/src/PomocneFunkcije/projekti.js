@@ -1,3 +1,5 @@
+import { formatirajDatum } from "./datum";
+
 export const dohvatiPopisProjekata = async () => {
   const jwt = localStorage.getItem("jwt");
   const id = localStorage.getItem("korisnik");
@@ -95,7 +97,9 @@ export const kreirajProjektniZadatak = async (
   idProjekta,
   naslov,
   opis,
-  stanje
+  stanje,
+  datum_zavrsetka,
+  datum_kreiranja
 ) => {
   const jwt = localStorage.getItem("jwt");
   const id = localStorage.getItem("korisnik");
@@ -111,6 +115,8 @@ export const kreirajProjektniZadatak = async (
       naslov,
       opis,
       stanje,
+      datum_zavrsetka,
+      datum_kreiranja,
     }),
   });
 
@@ -127,6 +133,7 @@ export const promijeniStanjeProjektnogZadatka = async (
 ) => {
   const jwt = localStorage.getItem("jwt");
   const id = localStorage.getItem("korisnik");
+  const datum = formatirajDatum(new Date());
 
   await fetch(`/api/projekt/projektni-zadaci/${id}`, {
     method: "PUT",
@@ -137,6 +144,43 @@ export const promijeniStanjeProjektnogZadatka = async (
     body: JSON.stringify({
       id: idZadatka,
       stanje: novoStanje,
+      datum_promjene: datum
     }),
   });
 };
+
+export const promijeniDatumProjektnogZadatka = async (idZadatka, noviDatum) => {
+  const jwt = localStorage.getItem("jwt");
+  const id = localStorage.getItem("korisnik");
+
+  await fetch(`/api/projekt/projektni-zadaci/datum/${id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: jwt,
+    },
+    body: JSON.stringify({
+      id: idZadatka,
+      datum_zavrsetka: noviDatum,
+    }),
+  });
+}
+
+export const dohvatiProjektneZadatkeKorisnika = async () => {
+  const jwt = localStorage.getItem("jwt");
+  const id = localStorage.getItem("korisnik");
+
+  const odgovor = await fetch(`/api/projekt/projektni-zadaci/${id}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: jwt,
+    },
+  });
+
+  if (odgovor.ok) {
+    const podaci = await odgovor.json(odgovor.body);
+    return podaci;
+  }
+  return null;
+}

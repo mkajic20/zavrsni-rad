@@ -161,6 +161,22 @@ exports.dohvatiDnevnePodatke = async function (zahtjev, odgovor) {
   }
 };
 
+exports.dohvatiDnevnePodatkeKorisnika = async function (zahtjev, odgovor) {
+  const id = zahtjev.params.id;
+  if (pom.provjeriZahtjev(zahtjev)) {
+    const upit = `SELECT * FROM dnevni_podaci WHERE korisnik_id = $id`;
+    const vrijednosti = {
+      $id: id,
+    }
+    const rezultat = await BP.dohvati(upit, vrijednosti);
+
+
+    odgovor.json(rezultat);
+  } else {
+    odgovor.status(401).json({ message: "Niste autorizirani" });
+  }
+}
+
 exports.kreirajDnevniPodatak = async function (zahtjev, odgovor) {
   const id = zahtjev.params.id;
   if (pom.provjeriZahtjev(zahtjev)) {

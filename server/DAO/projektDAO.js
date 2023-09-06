@@ -81,7 +81,7 @@ exports.dohvatiProjekt = async function (zahtjev, odgovor) {
     const projektNaziv = projektiRezultat[0].naziv;
 
     const zadaciUpit = `
-            SELECT p.id, p.naslov, p.opis, p.stanje_id
+            SELECT p.id, p.naslov, p.opis, p.stanje_id, p.datum_zavrsetka, p.datum_kreiranja, p.datum_promjene
             FROM projektni_zadaci p
             WHERE p.projekt_id = $id
         `;
@@ -101,12 +101,14 @@ exports.dohvatiProjekt = async function (zahtjev, odgovor) {
 exports.kreirajProjektniZadatak = async function (zahtjev, odgovor) {
   if (pom.provjeriZahtjev(zahtjev)) {
     const podaci = zahtjev.body;
-    const upit = `INSERT INTO projektni_zadaci (naslov, opis, projekt_id, stanje_id) VALUES($naslov, $opis, $id, $stanje);`;
+    const upit = `INSERT INTO projektni_zadaci (naslov, opis, projekt_id, stanje_id, datum_zavrsetka, datum_kreiranja) VALUES($naslov, $opis, $id, $stanje, $datum_zavrsetka, $datum_kreiranja);`;
     const vrijednosti = {
       $naslov: podaci.naslov,
       $opis: podaci.opis,
       $id: podaci.id,
       $stanje: podaci.stanje,
+      $datum_zavrsetka: podaci.datum_zavrsetka,
+      $datum_kreiranja: podaci.datum_kreiranja,
     };
     try {
       const rezultat = await BP.izvrsi(upit, vrijednosti);
@@ -125,11 +127,13 @@ exports.kreirajProjektniZadatak = async function (zahtjev, odgovor) {
 exports.azurirajProjektniZadatak = async function (zahtjev, odgovor) {
   if (pom.provjeriZahtjev(zahtjev)) {
     const podaci = zahtjev.body;
-    const upit = `UPDATE projektni_zadaci SET stanje_id = $stanje WHERE id = $id`;
+    const upit = `UPDATE projektni_zadaci SET stanje_id = $stanje, datum_promjene = $datum_promjene WHERE id = $id`;
     const vrijednosti = {
       $stanje: podaci.stanje,
       $id: podaci.id,
+      $datum_promjene: podaci.datum_promjene,
     };
+
     try {
       await BP.izvrsi(upit, vrijednosti);
       odgovor.status(204).json();
@@ -142,3 +146,52 @@ exports.azurirajProjektniZadatak = async function (zahtjev, odgovor) {
     odgovor.status(401).json({ message: "Niste autorizirani" });
   }
 };
+
+exports.azurirajDatumProjektnogZadatka = async function (zahtjev, odgovor) {
+  if (pom.provjeriZahtjev(zahtjev)) {
+    const podaci = zahtjev.body;
+    const upit = `UPDATE projektni_zadaci SET datum_zavrsetka = $datum_zavrsetka WHERE id = $id`;
+    const vrijednosti = {
+      $datum_zavrsetka: podaci.datum_zavrsetka,
+      $id: podaci.id,
+    };
+
+    try {
+      await BP.izvrsi(upit, vrijednosti);
+      odgovor.status(204).json();
+    } catch (error) {
+      odgovor
+        .status(500)
+        .json({ message: "Greška prilikom ažuriranja zadatka" });
+    }
+  } else {
+    odgovor.status(401).json({ message: "Niste autorizirani" });
+  }
+};
+
+exports.dohvatiProjektneZadatkeKorisnika = async function (zahtjev, odgovor) {
+  if (pom.provjeriZahtjev(zahtjev)) {
+
+    const id = zahtjev.params.id;
+    const upit = `SELECT * ` +
+      `FROM projektni_zadaci pz ` +
+      `INNER JOIN projekti p ON pz.projekt_id = p.id ` +
+      `WHERE p.korisnik_id = $id`;
+    const vrijednosti = {
+      $id: id,
+    }
+
+    try {
+      const rezultat = await BP.dohvati(upit, vrijednosti);
+      console.log(rezultat);
+      odgovor.json(rezultat);
+    } catch (error) {
+      odgovor
+        .status(500)
+        .json({ message: "Greška prilikom ažuriranja zadatka" });
+    }
+
+  } else {
+    odgovor.status(401).json({ message: "Niste autorizirani" });
+  }
+}

@@ -1,0 +1,14 @@
+@import '../../theme.scss';
+
+.tjedni-pregled-omotac {
+    display: flex;
+    width: 70vw;
+    flex-direction: column;
+
+    @media screen and ($racunalo) {
+        width: 80vw;
+        min-height: 70vh;
+        flex-direction: row;
+        gap: 10px;
+    }
+}

@@ -9,6 +9,10 @@ const Navigacija = ({ popisProjekata, popisFavorita }) => {
   return (
     <div className="navigacija">
       <section>
+        <h3 className='navigacija-naslov navigacija-poveznica' onClick={() => {navigacija(`/tjedni-pregled`)}}>Tjedni pregled</h3>
+      </section>
+      
+      <section>
         <h3 className='navigacija-naslov'>Zadaci</h3>
         <p className='navigacija-poveznica' onClick={() => {navigacija(`/trajni-zadaci`)}}>Trajni</p> 
         <p className='navigacija-poveznica' onClick={() => {navigacija(`/tjedni-zadaci`)}}>Tjedni</p>

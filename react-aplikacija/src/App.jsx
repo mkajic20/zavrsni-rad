@@ -25,6 +25,7 @@ import Biljeska from "./Stranice/Biljeska/Biljeska";
 import Prijava from "./Stranice/Prijava/Prijava";
 import Registracija from "./Stranice/Registracija/Registracija";
 import ZasticenaPutanja from "./Komponente/ZasticenaPutanja/ZasticenaPutanja";
+import { TjedniPregled } from "./Stranice/TjedniPregled/TjedniPregled";
 
 function App() {
 
@@ -185,6 +186,15 @@ function App() {
             element={
               <ZasticenaPutanja ispravan={prijavljen} putanja={"/prijava"}>
                 <Biljeska promijeniFavorita={promijeniFavorit} />
+              </ZasticenaPutanja>
+            }
+          />
+
+          <Route
+            path="/tjedni-pregled"
+            element={
+              <ZasticenaPutanja ispravan={prijavljen} putanja={"/prijava"}>
+                <TjedniPregled />
               </ZasticenaPutanja>
             }
           />

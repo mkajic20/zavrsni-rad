@@ -111,3 +111,25 @@ export const obrisiDnevniZadatak = async (zadatakId) => {
     }),
   });
 };
+
+export const dohvatiDnevnePodatkeKorisnika = async () => {
+  const jwt = localStorage.getItem("jwt");
+  const id = localStorage.getItem("korisnik");
+
+  const odgovor = await fetch(
+    `/api/zadaci/dnevni-podaci/korisnik/${id}`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: jwt,
+      },
+    }
+  );
+
+  if (odgovor.ok) {
+    const podaci = await odgovor.json(odgovor.body);
+    return podaci;
+  }
+  return null;
+}

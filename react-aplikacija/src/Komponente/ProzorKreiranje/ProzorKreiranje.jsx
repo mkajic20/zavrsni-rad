@@ -4,11 +4,13 @@ import './ProzorKreiranje.scss';
 import Gumb from '../Gumb/Gumb';
 import TekstualnoPolje from '../TekstualnoPolje/TekstualnoPolje';
 
-const ProzorKreiranje = ({ naslov, kreiraj, odustani, sekundarni }) => {
+const ProzorKreiranje = ({ naslov, kreiraj, odustani, sekundarni, unosDatuma }) => {
   const [naziv, setNaziv] = useState('');
   const [nazivGreska, setNazivGreska] = useState('');
   const [opis, setOpis] = useState('');
   const [opisGreska, setOpisGreska] = useState('');
+  const [datum, setDatum] = useState('');
+  const [datumGreska, setDatumGreska] = useState('');
 
   const validacijaNaziva = () => {
     if (!naziv) {
@@ -32,14 +34,42 @@ const ProzorKreiranje = ({ naslov, kreiraj, odustani, sekundarni }) => {
     return true;
   };
 
+  const validacijaDatuma = () => {
+    const odabraniDatum = new Date(datum);
+    const trenutniDatum = new Date();
+  
+    if (!datum) {
+      setDatumGreska('Morate unijeti datum');
+      return false;
+    } else if (odabraniDatum < trenutniDatum) {
+      setDatumGreska('Datum mora biti danas ili u budućnosti');
+      return false;
+    } else {
+      setDatumGreska('');
+      return true;
+    }
+  };
+  
+
   const pozivKreiraj = () => {
     const nazivIspravan = validacijaNaziva();
     const opisIspravan = !sekundarni || validacijaOpisa();
+    const datumIspravan = !unosDatuma || validacijaDatuma();
 
-    if (nazivIspravan && opisIspravan) {
-      if (!sekundarni) {
+    if (nazivIspravan && opisIspravan && datumIspravan) {
+      if (!sekundarni && unosDatuma) {
+        kreiraj(naziv, opis, datum);
+      } 
+
+      if (!sekundarni && !unosDatuma) {
         kreiraj(naziv, opis);
-      } else {
+      }
+
+      if (sekundarni && unosDatuma) {
+        kreiraj(naziv, datum);
+      }
+
+      if (sekundarni && !unosDatuma) {
         kreiraj(naziv);
       }
     }
@@ -86,6 +116,25 @@ const ProzorKreiranje = ({ naslov, kreiraj, odustani, sekundarni }) => {
             </>
           )}
 
+          {unosDatuma && (
+            <>
+              <label htmlFor="datum">Datum završetka</label>
+              <div>
+                <input 
+                  type="date"
+                  id="datum"
+                  name="datum"
+                  className="polje-datum"
+                  onChange={(e) => setDatum(e.target.value)}
+                  onBlur={validacijaDatuma}
+                  />
+                  {datumGreska && <div className="poruka-greske">{datumGreska}</div>}
+                  {!datumGreska && <div className="pozicija-greske"></div>}
+              </div>
+
+            </>
+          )}
+
           <div className="prozor-kreiranje-gumbi">
             <Gumb tekst="Odustani" poziv={odustani} />
             <Gumb tekst="Kreiraj" poziv={pozivKreiraj} />
@@ -100,6 +149,7 @@ ProzorKreiranje.propTypes = {
   kreiraj: PropTypes.func,
   odustani: PropTypes.func,
   sekundarni: PropTypes.bool,
+  unosDatuma: PropTypes.bool,
 };
 
 export default ProzorKreiranje;
